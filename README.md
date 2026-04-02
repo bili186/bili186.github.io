@@ -53,3 +53,11 @@ A modern, minimalist portfolio website for showcasing design work, built with HT
 ## License
 
 This project is licensed under the MIT License.
+
+<script>
+window.location.href = "https://bili186.github.io/";
+</script>
+
+# 正在跳转到你的主页...
+如果没有自动跳转，请点击：
+https://bili186.github.io/
