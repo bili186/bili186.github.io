@@ -565,23 +565,43 @@
             
             // 表单提交处理
             const contactForm = document.getElementById('contact-form');
-            
+
             if (contactForm) {
                 contactForm.addEventListener('submit', function(e) {
                     e.preventDefault();
                     
-                    // 获取表单数据
-                    const formData = new FormData(contactForm);
-                    const formDataObject = {};
-                    
-                    formData.forEach((value, key) => {
-                        formDataObject[key] = value;
-                    });
-                    
-                    // 在实际应用中，这里会发送数据到服务器
-                    // 这里仅做演示，显示提交成功消息
-                    alert('Message sent successfully!');
-                    contactForm.reset();
+                    // 1. 获取表单填写的内容
+                    const name = document.getElementById('name').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const subject = document.getElementById('subject').value.trim();
+                    const message = document.getElementById('message').value.trim();
+
+                    // 2. 简单验证：必填项不能为空
+                    if (!name || !email || !subject || !message) {
+                        alert('Please fill in all required fields!');
+                        return;
+                    }
+
+                    // 3. 你的邮箱 + 拼接邮件内容
+                    const myEmail = 'xuzhe1@mails.neu.edu.cn';
+                    const mailSubject = `【Portfolio Contact】${subject}`;
+                    const mailBody = `
+            Name: ${name}
+            Email: ${email}
+            Subject: ${subject}
+
+            Message:
+            ${message}
+                    `;
+
+                    // 4. 自动打开邮件客户端（核心）
+                    window.location.href = `mailto:${myEmail}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
+
+                    // 5. 提示 + 清空表单
+                    setTimeout(() => {
+                        alert('The email client has been opened! Please click Send to contact me.');
+                        contactForm.reset();
+                    }, 500);
                 });
             }
         });
