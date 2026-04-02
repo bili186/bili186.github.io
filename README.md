@@ -1,63 +1,25 @@
 # Designer Portfolio Website
-
 A modern, minimalist portfolio website for showcasing design work, built with HTML5, CSS3, JavaScript, and GSAP animations.
 
-## Features
+## 🔗 立即访问主页
+### 🚪 [点击进入我的主页](https://bili186.github.io/)
+### 自动跳转中，请点击上方链接进入主页
 
-- Clean, minimalist design with focus on the work
-- Responsive layout that works on all devices
-- Smooth animations and transitions using GSAP
-- Filterable work gallery
-- Detailed project pages
-- About section with timeline for experience and education
-- Contact form
-- Mobile-friendly navigation
+---
 
-## Technologies Used
+Features
+Clean, minimalist design with focus on the work
+Responsive layout that works on all devices
+Smooth animations and transitions using GSAP
+Filterable work gallery
+Detailed project pages
+About section with timeline for experience and education
+Contact form
+Mobile-friendly navigation
 
-- HTML5
-- CSS3 with Tailwind CSS
-- JavaScript
-- GSAP (GreenSock Animation Platform)
-- Font Awesome icons
-
-## Project Structure
-
-```
-/
-├── index.html          # Main portfolio page
-├── works/              # Project detail pages
-│   ├── work1.html
-│   └── ...
-├── css/                # CSS files
-│   └── style.css
-├── js/                 # JavaScript files
-│   └── script.js
-└── assets/             # Images and other assets
-    └── images/
-```
-
-## How to Use
-
-1. Clone or download the repository
-2. Open `index.html` in a web browser
-3. To view project details, click on any work item in the gallery
-
-## Customization
-
-- Replace the images in `assets/images/` with your own work
-- Update the text content in `index.html` and the work detail pages
-- Modify the color scheme in the Tailwind CSS configuration
-- Adjust animations in the JavaScript files
-
-## License
-
-This project is licensed under the MIT License.
-
-<script>
-window.location.href = "https://bili186.github.io/";
-</script>
-
-# 正在跳转到你的主页...
-如果没有自动跳转，请点击：
-https://bili186.github.io/
+Technologies Used
+HTML5
+CSS3 with Tailwind CSS
+JavaScript
+GSAP (GreenSock Animation Platform)
+Font Awesome icons
