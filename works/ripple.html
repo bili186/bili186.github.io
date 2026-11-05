@@ -1,0 +1,441 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RipPLE: Concentric Hypersphere Embedding | Xu Zhe</title>
+    <meta name="description" content="RipPLE: Concentric Hypersphere Embedding for Pairwise Similarity Learning. First-author work on face recognition that encodes per-image evidence in the embedding norm, with an expected norm constraint (ENC).">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {primary: '#111111',secondary: '#333333',accent: '#0066ff',light: '#f5f5f5'},
+                    fontFamily: {sans: ['Inter', 'system-ui', 'sans-serif']}
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-balance {text-wrap: balance;}
+            .card-shadow {box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);}
+            .nav-shadow {box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);}
+        }
+    </style>
+
+    <style>
+        ::-webkit-scrollbar {width: 8px;}
+        ::-webkit-scrollbar-track {background: #f1f1f1;}
+        ::-webkit-scrollbar-thumb {background: #888;border-radius: 4px;}
+        ::-webkit-scrollbar-thumb:hover {background: #555;}
+        .image-viewer {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background-color: rgba(0, 0, 0, 0.9);z-index: 100;justify-content: center;align-items: center;}
+        .image-viewer.active {display: flex;}
+        .image-viewer img {max-width: 92%;max-height: 92%;object-fit: contain;}
+        .image-viewer-close {position: absolute;top: 20px;right: 26px;color: white;font-size: 34px;cursor: pointer;}
+        .fade-in {opacity: 0;transform: translateY(20px);transition: opacity 0.6s ease-out, transform 0.6s ease-out;}
+        .fade-in.active {opacity: 1;transform: translateY(0);}
+        .result-table th, .result-table td {padding: 0.7rem 0.9rem;white-space: nowrap;}
+        .result-table thead th {font-size: 0.75rem;letter-spacing: 0.04em;text-transform: uppercase;color: #6b7280;font-weight: 600;}
+        .result-table tbody tr + tr {border-top: 1px solid #eef0f3;}
+        .formula {font-family: Georgia, "Times New Roman", serif;font-style: italic;}
+    </style>
+</head>
+<body class="bg-white text-primary font-sans">
+    <nav id="navbar" class="fixed top-0 left-0 w-full bg-white bg-opacity-95 nav-shadow py-4 z-50">
+        <div class="container mx-auto px-4 md:px-8">
+            <div class="flex justify-between items-center">
+                <a href="../index.html" class="text-2xl font-bold text-primary">Xu Zhe</a>
+                <div class="hidden md:flex ml-auto space-x-8">
+                    <a href="../index.html" class="text-secondary hover:text-accent transition-colors">Home</a>
+                    <a href="../index.html#works" class="text-secondary hover:text-accent transition-colors">Projects</a>
+                    <a href="../index.html#about" class="text-secondary hover:text-accent transition-colors">About</a>
+                    <a href="../index.html#contact" class="text-secondary hover:text-accent transition-colors">Contact</a>
+                </div>
+                <button id="menu-toggle" class="md:hidden ml-auto text-primary focus:outline-none" aria-label="Toggle navigation">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden bg-white hidden absolute top-full left-0 w-full border-t border-gray-100">
+            <div class="container mx-auto px-4 py-4">
+                <a href="../index.html" class="block py-2 text-secondary hover:text-accent">Home</a>
+                <a href="../index.html#works" class="block py-2 text-secondary hover:text-accent">Projects</a>
+                <a href="../index.html#about" class="block py-2 text-secondary hover:text-accent">About</a>
+                <a href="../index.html#contact" class="block py-2 text-secondary hover:text-accent">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-16 pb-16">
+        <section class="pt-16 pb-10 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <p class="text-xs tracking-widest text-accent font-semibold mb-4">FIRST-AUTHOR PAPER &middot; UNDER REVIEW</p>
+                    <h1 class="text-3xl md:text-5xl font-bold mb-4 leading-tight">RipPLE: Concentric Hypersphere Embedding</h1>
+                    <p class="text-lg md:text-xl text-gray-500 mb-6">Concentric Hypersphere Embedding for Pairwise Similarity Learning</p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">Face Recognition</span>
+                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">Metric Learning</span>
+                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">PyTorch</span>
+                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">2026</span>
+                    </div>
+                    <p class="text-gray-600 text-lg mb-8 max-w-3xl">
+                        Face embeddings are usually L2-normalised, which throws away how reliable each image is.
+                        RipPLE keeps the norm and lets it carry exactly that: direction encodes identity, norm encodes evidence,
+                        learned end-to-end by the pairwise loss and used at scoring time.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="https://github.com/bili186/Ripple" target="_blank" rel="noopener"
+                           class="inline-flex items-center px-6 py-3 bg-black text-white text-sm font-medium rounded-md hover:bg-gray-800 transition">
+                            <i class="fa fa-github mr-2"></i>Code
+                        </a>
+                        <a href="https://huggingface.co/YunZhe123/Ripple" target="_blank" rel="noopener"
+                           class="inline-flex items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-md hover:bg-gray-100 transition">
+                            <i class="fa fa-cube mr-2"></i>Released models
+                        </a>
+                        <a href="#results"
+                           class="inline-flex items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-md hover:bg-gray-100 transition">
+                            Results
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white border border-gray-100 p-6 rounded-lg shadow-sm fade-in">
+                            <p class="text-3xl font-bold">96.82</p>
+                            <p class="text-sm text-gray-500 mt-1">IJB-C TAR@FAR=1e-4</p>
+                        </div>
+                        <div class="bg-white border border-gray-100 p-6 rounded-lg shadow-sm fade-in" style="transition-delay: 0.15s;">
+                            <p class="text-3xl font-bold">95.50</p>
+                            <p class="text-sm text-gray-500 mt-1">IJB-B TAR@FAR=1e-4</p>
+                        </div>
+                        <div class="bg-white border border-gray-100 p-6 rounded-lg shadow-sm fade-in" style="transition-delay: 0.3s;">
+                            <p class="text-3xl font-bold">98.37</p>
+                            <p class="text-sm text-gray-500 mt-1">IJB-B TAR after norm-based frame filtering</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-4">IResNet-100, trained on MS1MV2 for 240k steps.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="pb-4">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto">
+                    <figure class="relative cursor-pointer" onclick="openImageViewer('../assets/images/ripple_concept.png')">
+                        <img src="../assets/images/ripple_concept.png" alt="Feature ambiguity under occlusion, noise and blur, and how RipPLE lets the norm carry evidence" class="w-full h-auto rounded-lg border border-gray-100">
+                        <div class="absolute inset-0 flex items-end justify-end p-3">
+                            <span class="px-3 py-1.5 bg-white bg-opacity-90 text-xs font-medium rounded-md text-secondary">
+                                <i class="fa fa-search-plus mr-1"></i>Enlarge
+                            </span>
+                        </div>
+                    </figure>
+                    <figcaption class="text-sm text-gray-500 mt-4 leading-relaxed">
+                        Under occlusion, blur or extreme pose, standard angular scores let impostor pairs rise and genuine pairs fall until the
+                        two distributions overlap &mdash; the feature ambiguity dilemma. RipPLE encodes per-image evidence in the norm (marker size),
+                        so both distributions converge towards zero and a degraded pair is flagged as hard to decide instead of wrongly decided.
+                    </figcaption>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="fade-in">
+                        <h2 class="text-2xl font-bold mb-6">The Problem</h2>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            Normalising every embedding onto the unit hypersphere makes scoring purely angular. The angular score answers
+                            <em>how similar</em> two faces look, but not <em>how much evidence</em> supports that similarity.
+                        </p>
+                        <p class="text-gray-600 leading-relaxed">
+                            Low-quality inputs therefore collapse into the same region as clean impostors, which directly lowers the true
+                            acceptance rate at the low false-accept rates that security applications demand.
+                        </p>
+                        <h2 class="text-2xl font-bold mb-6 mt-10">The Idea</h2>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            Keep the norm, and learn it. The radial coordinate becomes a confidence signal that grows for clear faces and
+                            shrinks for degraded ones, while the angular coordinate stays responsible for identity.
+                        </p>
+                        <p class="text-gray-600 leading-relaxed">
+                            Because the norm also scales every logit, it acts as the temperature of the loss: left free it hampers
+                            convergence, fixed per sample it removes the evidence.
+                        </p>
+                    </div>
+
+                    <div class="fade-in">
+                        <h2 class="text-2xl font-bold mb-6">Three Anchoring Forms</h2>
+                        <div class="space-y-5">
+                            <div class="border border-gray-100 rounded-lg p-5 bg-white shadow-sm">
+                                <div class="flex items-baseline justify-between mb-1">
+                                    <h3 class="font-semibold">RipPLE</h3>
+                                    <span class="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-500">main form</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mb-2">Arithmetic mean of the batch norms</p>
+                                <p class="text-gray-600 text-sm leading-relaxed">
+                                    Anchors <span class="formula">&rho;</span>, the mean norm shared by training and inference, so a typical logit is
+                                    <span class="formula">&rho;<sup>2</sup>(cos&thinsp;&theta; &minus; b<sub>&theta;</sub>)</span>. Best verification accuracy.
+                                </p>
+                            </div>
+                            <div class="border border-gray-100 rounded-lg p-5 bg-white shadow-sm">
+                                <h3 class="font-semibold mb-1">RipPLE-GM</h3>
+                                <p class="text-sm text-gray-500 mb-2">Geometric mean of the norms</p>
+                                <p class="text-gray-600 text-sm leading-relaxed">
+                                    Anchors the multiplicative centre of the radii; suits norms spanning orders of magnitude, performance close
+                                    to the arithmetic form.
+                                </p>
+                            </div>
+                            <div class="border border-gray-100 rounded-lg p-5 bg-white shadow-sm">
+                                <h3 class="font-semibold mb-1">RipPLE-P</h3>
+                                <p class="text-sm text-gray-500 mb-2">Per-pair scale</p>
+                                <p class="text-gray-600 text-sm leading-relaxed">
+                                    Ties each pair's scales to its own directional difference, making the norm readable image by image &mdash;
+                                    the form used for template frame filtering.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-3">Norm as an Uncertainty Score</h2>
+                    <p class="text-gray-600 mb-8 max-w-3xl">
+                        Ranking template frames by norm and discarding the lowest-ranked fraction beats PFE's uncertainty ranking at every
+                        filter-out rate on both IJB-B and IJB-C.
+                    </p>
+                    <figure class="relative cursor-pointer" onclick="openImageViewer('../assets/images/ripple_p_vs_pfe.png')">
+                        <img src="../assets/images/ripple_p_vs_pfe.png" alt="TAR@FAR=1e-4 versus fraction of lowest-norm template frames discarded, RipPLE-P vs PFE" class="w-full h-auto rounded-lg border border-gray-100 bg-white">
+                    </figure>
+                    <figcaption class="text-sm text-gray-500 mt-4">
+                        TAR@FAR=1e-4 as a function of the discarded fraction of lowest-norm frames: IJB-B (a) 94.71 &rarr; 98.37,
+                        IJB-C (b) 96.60 &rarr; 99.47.
+                    </figcaption>
+                </div>
+            </div>
+        </section>
+
+        <section id="results" class="py-12">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-3">Results</h2>
+                    <p class="text-gray-600 mb-8 max-w-3xl">
+                        1:1 verification (TAR@FAR) and 1:N identification (TPIR@FPIR), IResNet-100 trained on MS1MV2.
+                        Compared-method numbers are quoted from the respective papers.
+                    </p>
+                    <div class="overflow-x-auto rounded-lg border border-gray-100">
+                        <table class="result-table w-full text-sm text-left">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th>Method</th>
+                                    <th class="text-right">B 1e-6</th>
+                                    <th class="text-right">B 1e-5</th>
+                                    <th class="text-right">B 1e-4</th>
+                                    <th class="text-right">C 1e-6</th>
+                                    <th class="text-right">C 1e-5</th>
+                                    <th class="text-right">C 1e-4</th>
+                                    <th class="text-right">1:N TPIR@1e-2 (B/C)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-700">
+                                <tr>
+                                    <td>SimPLE</td>
+                                    <td class="text-right">49.87</td><td class="text-right">91.13</td><td class="text-right">94.78</td>
+                                    <td class="text-right">90.30</td><td class="text-right">94.34</td><td class="text-right">96.27</td>
+                                    <td class="text-right">85.92 / 92.88</td>
+                                </tr>
+                                <tr>
+                                    <td>SimPLE + ENC</td>
+                                    <td class="text-right font-medium">51.89</td><td class="text-right">91.88</td><td class="text-right">95.35</td>
+                                    <td class="text-right">90.55</td><td class="text-right">94.61</td><td class="text-right">96.66</td>
+                                    <td class="text-right">84.34 / 93.01</td>
+                                </tr>
+                                <tr class="bg-accent bg-opacity-5">
+                                    <td class="font-semibold">RipPLE</td>
+                                    <td class="text-right">44.72</td><td class="text-right font-semibold">92.57</td><td class="text-right font-semibold">95.50</td>
+                                    <td class="text-right font-semibold">92.13</td><td class="text-right font-semibold">95.09</td><td class="text-right font-semibold">96.82</td>
+                                    <td class="text-right font-semibold">87.21 / 93.89</td>
+                                </tr>
+                                <tr>
+                                    <td>RipPLE-P</td>
+                                    <td class="text-right">44.63</td><td class="text-right">92.19</td><td class="text-right">95.37</td>
+                                    <td class="text-right">90.19</td><td class="text-right">94.93</td><td class="text-right">96.67</td>
+                                    <td class="text-right">85.29 / 93.29</td>
+                                </tr>
+                                <tr>
+                                    <td>RipPLE-GM</td>
+                                    <td class="text-right">38.76</td><td class="text-right">92.01</td><td class="text-right">95.20</td>
+                                    <td class="text-right">90.75</td><td class="text-right">94.78</td><td class="text-right">96.58</td>
+                                    <td class="text-right">87.32 / 93.30</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-4">
+                        RipPLE leads at 1e-5 and 1e-4 on both benchmarks and on 1:N TPIR, while SimPLE+ENC keeps the best IJB-B 1e-6 point.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="fade-in">
+                        <h2 class="text-2xl font-bold mb-6">Implementation</h2>
+                        <ul class="space-y-3 text-gray-600">
+                            <li><span class="font-medium text-primary">Training</span> &mdash; proxy-free pairwise training, DDP, MoCo-style EMA feature bank (524,288 entries, momentum 0.999).</li>
+                            <li><span class="font-medium text-primary">Backbones</span> &mdash; IResNet-100 and SFNet-64.</li>
+                            <li><span class="font-medium text-primary">Data</span> &mdash; MS1MV2 for training; LFW, AgeDB-30, CALFW, CPLFW, CFP-FP for validation; IJB-B and IJB-C for testing.</li>
+                            <li><span class="font-medium text-primary">Protocols</span> &mdash; 1:1 verification, 1:N identification, image-level norm filtering, feature extraction on arbitrary folders with MTCNN alignment.</li>
+                        </ul>
+                        <h3 class="text-xl font-semibold mb-4 mt-10">Technical Stack</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm">PyTorch</span>
+                            <span class="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm">Distributed Data Parallel</span>
+                            <span class="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm">MoCo EMA</span>
+                            <span class="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm">IResNet / SFNet</span>
+                            <span class="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm">MTCNN</span>
+                        </div>
+                    </div>
+                    <div class="fade-in">
+                        <h2 class="text-2xl font-bold mb-6">Reproducing</h2>
+                        <pre class="bg-primary text-gray-100 text-[13px] leading-relaxed rounded-lg p-5 overflow-x-auto"><code>git clone https://github.com/bili186/Ripple.git
+cd Ripple
+conda env create -f environment.yml
+
+# train RipPLE, IResNet-100 on MS1M, 2 GPUs
+torchrun --nproc_per_node=2 main_train.py \
+  --cfg_path config/train/ms1m_iresnet100_ripple.yml \
+  --proj_dir project/ripple
+
+# evaluate on IJB-C
+python main_test.py \
+  --cfg_path config/test/ijbc.yml \
+  --proj_dir project/ripple/&lt;timestamp&gt;</code></pre>
+                        <p class="text-sm text-gray-500 mt-4">
+                            Built on <a class="text-accent hover:underline" href="https://github.com/ydwen/opensphere" target="_blank" rel="noopener">OpenSphere</a>:
+                            the training/testing framework, backbones and baseline heads are inherited from it.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12">
+            <div class="container mx-auto px-4">
+                <h2 class="text-2xl font-bold mb-10 text-center">Related Projects</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                    <div class="work-card bg-white rounded-lg overflow-hidden shadow-sm group fade-in">
+                        <a href="work6.html" class="block relative overflow-hidden">
+                            <img src="../assets/covers/reid-interpretability.svg" alt="Re-ID Interpretability" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                        </a>
+                        <div class="p-4">
+                            <h3 class="font-semibold mb-1">Re-ID Interpretability</h3>
+                            <a href="work6.html" class="text-accent text-sm font-medium hover:underline">View Project</a>
+                        </div>
+                    </div>
+                    <div class="work-card bg-white rounded-lg overflow-hidden shadow-sm group fade-in" style="transition-delay: 0.2s;">
+                        <a href="work2.html" class="block relative overflow-hidden">
+                            <img src="../assets/covers/reid-multimodal.svg" alt="Multimodal Person Re-ID" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                        </a>
+                        <div class="p-4">
+                            <h3 class="font-semibold mb-1">Multimodal Person Re-ID</h3>
+                            <a href="work2.html" class="text-accent text-sm font-medium hover:underline">View Project</a>
+                        </div>
+                    </div>
+                    <div class="work-card bg-white rounded-lg overflow-hidden shadow-sm group fade-in" style="transition-delay: 0.4s;">
+                        <a href="work3.html" class="block relative overflow-hidden">
+                            <img src="../assets/covers/thyroid.svg" alt="Thyroid Carcinoma Classification" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                        </a>
+                        <div class="p-4">
+                            <h3 class="font-semibold mb-1">Thyroid Carcinoma Classification</h3>
+                            <a href="work3.html" class="text-accent text-sm font-medium hover:underline">View Project</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-12">
+                    <a href="../index.html#works" class="inline-flex items-center px-8 py-3 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition duration-300">
+                        Back to All Projects
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-12 bg-black text-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <h3 class="text-2xl font-bold">Xu Zhe</h3>
+                    <p class="text-gray-400 mt-2">Mathematics &amp; Computer Science Undergraduate</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="https://github.com/bili186" class="text-gray-400 hover:text-white transition duration-300" aria-label="GitHub">
+                        <i class="fa fa-github text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+                <p>© 2026 Xu Zhe. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="image-viewer" class="image-viewer">
+        <span class="image-viewer-close" onclick="closeImageViewer()">&times;</span>
+        <img id="viewer-image" src="" alt="Large image view">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuToggle.addEventListener('click', function() {mobileMenu.classList.toggle('hidden');});
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {navbar.classList.add('bg-white', 'shadow-md');navbar.classList.remove('bg-opacity-95');}
+                else {navbar.classList.remove('shadow-md');navbar.classList.add('bg-opacity-95');}
+            });
+            const fadeElements = document.querySelectorAll('.fade-in');
+            const fadeInOnScroll = function() {
+                fadeElements.forEach(element => {
+                    if (element.getBoundingClientRect().top < window.innerHeight - 100) {element.classList.add('active');}
+                });
+            };
+            fadeInOnScroll();
+            window.addEventListener('scroll', fadeInOnScroll);
+            if (typeof gsap !== 'undefined') {
+                gsap.from('section:first-of-type h1', {opacity: 0, y: 40, duration: 0.9, delay: 0.15});
+                gsap.from('section:first-of-type p', {opacity: 0, y: 20, duration: 0.9, delay: 0.45, stagger: 0.1});
+            }
+        });
+        function openImageViewer(imageUrl) {
+            document.getElementById('viewer-image').src = imageUrl;
+            document.getElementById('image-viewer').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeImageViewer() {
+            document.getElementById('image-viewer').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        document.getElementById('image-viewer').addEventListener('click', function(e) {
+            if (e.target === this) {closeImageViewer();}
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {closeImageViewer();}
+        });
+    </script>
+</body></html>

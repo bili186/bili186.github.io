@@ -2,6 +2,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xu Zhe - Resume | Mathematics & Computer Science</title>
+    <meta name="description" content="Xu Zhe - undergraduate in Mathematics and Applied Mathematics at Northeastern University, minoring in Computer Science. Research on face recognition, multimodal person re-identification, computer vision and mathematical modeling.">
+    <meta name="author" content="Xu Zhe">
+    <meta name="keywords" content="Xu Zhe, RipPLE, face recognition, person re-identification, multimodal retrieval, computer vision, mathematical modeling, Northeastern University">
+    <link rel="canonical" href="https://bili186.github.io/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Xu Zhe">
+    <meta property="og:title" content="Xu Zhe - Mathematics & Computer Science">
+    <meta property="og:description" content="Undergraduate research portfolio: face recognition, multimodal person re-identification, computer vision and mathematical modeling.">
+    <meta property="og:url" content="https://bili186.github.io/">
+    <meta property="og:image" content="https://bili186.github.io/assets/images/ripple_concept.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#111111">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -114,7 +127,7 @@
     <!-- 导航栏 -->
     <nav id="navbar" class="navbar-fixed bg-white bg-opacity-95 nav-shadow py-4">
         <div class="container mx-auto px-4 md:px-8">
-            <div class="flex justify-between-between items-center">
+            <div class="flex justify-between items-center">
                 <a href="#" class="text-2xl font-bold text-primary">Xu Zhe</a>
                 
                 <!-- 桌面导航 -->
@@ -136,8 +149,8 @@
         <div id="mobile-menu" class="md:hidden bg-white hidden absolute top-full left-0 w-full border-t border-gray-100">
             <div class="container mx-auto px-4 py-4">
                 <a href="#home" class="block py-2 text-secondary hover:text-accent">Home</a>
-                <a href="#works" class="block py-2 text-secondaryary hover:text-accent">Projects</a>
-                <a href="#about" class="block py-2 text-secondaryary hover:text-accent">About</a>
+                <a href="#works" class="block py-2 text-secondary hover:text-accent">Projects</a>
+                <a href="#about" class="block py-2 text-secondary hover:text-accent">About</a>
                 <a href="#contact" class="block py-2 text-secondary hover:text-accent">Contact</a>
             </div>
         </div>
@@ -149,9 +162,13 @@
             <div class="flex flex-col md:flex-row items-center justify-between gap-12">
                 <!-- 左侧文字内容 -->
                 <div class="max-w-3xl md:w-1/2">
-                    <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight" style="font-size: 96px;">Hi, I'm Xu Zhe 👋</h1>
-                    <p class="text-xl md:text-2xl text-gray-600 mb-8" style="font-size: 18px; line-height: 27px; color: rgb(33, 35, 38);">
-                        Undergraduate Student | Mathematics & Computer Science-Minor
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">Hi, I'm Xu Zhe 👋</h1>
+                    <p class="text-lg md:text-xl text-gray-600 mb-3">
+                        Undergraduate Student | Mathematics &amp; Computer Science-Minor
+                    </p>
+                    <p class="text-sm text-gray-500 mb-8 flex items-center gap-2">
+                        <span class="inline-block w-2 h-2 rounded-full bg-accent"></span>
+                        First-author paper under review &mdash; RipPLE, concentric hypersphere embedding
                     </p>
                     <div class="flex space-x-4">
                         <a href="#works" class="px-8 py-3 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition duration-300">
@@ -180,10 +197,29 @@
             
             <!-- 网格布局容器（必需！） -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 项目0 RipPLE 论文（首位）跳转 works/ripple.html -->
+                <a href="works/ripple.html" class="work-card bg-white rounded-lg overflow-hidden shadow-sm group" data-category="Research">
+                    <div class="relative overflow-hidden">
+                        <img src="assets/covers/ripple.svg" alt="RipPLE: Concentric Hypersphere Embedding" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <span class="absolute top-3 left-3 px-3 py-1 bg-white bg-opacity-95 text-[11px] font-medium tracking-wider rounded-full text-secondary">PAPER &middot; UNDER REVIEW</span>
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                            <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Details</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">RipPLE: Concentric Hypersphere Embedding</h3>
+                        <p class="text-gray-600 text-sm mb-4">Pairwise face recognition that encodes evidence in the embedding norm; IJB-C TAR@FAR=1e-4 reaches 96.82%.</p>
+                        <div class="flex justify-between items-center">
+                            <div class="px-4 py-2 bg-gray-100 rounded-full text-sm">Metric Learning</div>
+                            <span class="text-sm text-accent font-medium">First author</span>
+                        </div>
+                    </div>
+                </a>
+
                 <!-- 项目1 跳转 works/work1.html -->
                 <a href="works/work1.html" class="work-card bg-white rounded-lg overflow-hidden shadow-sm group" data-category="AI">
                     <div class="relative overflow-hidden">
-                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/29449b1a007b4221921bce21be1e4dd2~tplv-a9rns2rl98-image.image" alt="UAV Algorithm Optimization" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="assets/covers/uav.svg" alt="UAV Algorithm Optimization" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
                         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                             <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Details</span>
                         </div>
@@ -200,7 +236,7 @@
                 <!-- 项目2 跳转 works/work2.html -->
                 <a href="works/work2.html" class="work-card bg-white rounded-lg overflow-hidden shadow-sm group" data-category="AI">
                     <div class="relative overflow-hidden">
-                        <img src="assets/images/流程图.png" alt="Person Re-Identification" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="assets/covers/reid-multimodal.svg" alt="Person Re-Identification" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
                         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                             <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Details</span>
                         </div>
@@ -217,7 +253,7 @@
                 <!-- 项目3 跳转 works/work3.html -->
                 <a href="works/work3.html" class="work-card bg-white rounded-lg overflow-hidden shadow-sm group" data-category="AI">
                     <div class="relative overflow-hidden">
-                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/574e47a1407b482b836e9e65afe0a269~tplv-a9rns2rl98-image.image" alt="Thyroid Cancer Classification" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="assets/covers/thyroid.svg" alt="Thyroid Cancer Classification" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
                         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                             <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Details</span>
                         </div>
@@ -234,7 +270,7 @@
                 <!-- 项目4 跳转 works/work4.html -->
                 <a href="works/work4.html" class="work-card bg-white rounded-lg overflow-hidden shadow-sm group" data-category="CV">
                     <div class="relative overflow-hidden">
-                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/90032b8a3adf4b169b1957cdb1e6afaf~tplv-a9rns2rl98-image.image" alt="Weld Image Recognition" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="assets/covers/weld.svg" alt="Weld Image Recognition" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
                         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                             <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Details</span>
                         </div>
@@ -251,7 +287,7 @@
                 <!-- 项目5 跳转 works/work5.html -->
                 <a href="works/work5.html" class="work-card bg-white rounded-lg overflow-hidden shadow-sm group" data-category="Competition">
                     <div class="relative overflow-hidden">
-                        <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/98c01d1c61c645778cdcb4e529a8882e~tplv-a9rns2rl98-image.image" alt="Mathematical Modeling" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="assets/covers/mathmodel.svg" alt="Mathematical Modeling" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
                         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                             <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Details</span>
                         </div>
@@ -268,7 +304,7 @@
                 <!-- 项目6 跳转 works/work6.html -->
                 <a href="works/work6.html" class="work-card bg-white rounded-lg overflow-hidden shadow-sm group" data-category="Research">
                     <div class="relative overflow-hidden">
-                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/19abb3f8a92e47949319b2c891001bc3~tplv-a9rns2rl98-image.image" alt="Research Paper" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="assets/covers/reid-interpretability.svg" alt="Research Paper" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
                         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                             <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Details</span>
                         </div>
@@ -370,8 +406,8 @@
     <section id="contact" class="py-24 bg-gray-50">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center">Get In Touch</h2>
-            <div class="flex flex-col lg:flex-row gap-12">                
-                <!-- 右侧联系表单 -->
+            <div class="flex justify-center gap-12">
+                <!-- 联系信息与表单 -->
                 <div class="mx-auto px-4">
                     <div class="bg-white p-8 rounded-lg shadow-sm">
                         <h3 class="text-2xl font-semibold mb-6">Contact Information</h3>
@@ -428,7 +464,7 @@
             </div>
             
             <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
-                <p>© 2025 Xu Zhe. All rights reserved.</p>
+                <p>© 2026 Xu Zhe. All rights reserved.</p>
             </div>
         </div>
     </footer>
