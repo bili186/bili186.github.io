@@ -2,7 +2,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UAV Auto-aiming Algorithm | Xu Zhe</title>
-    <meta name="description" content="UAV auto-aiming algorithm: vision-based target detection and tracking, with hardware/software integration debugging.">
+    <meta name="description" content="Omni Perception: open-source multi-camera armor detection on ROS2 and Intel OpenVINO. Three USB cameras at 640×480/60 fps, PnP pose estimation, 500 ms timeout watchdog.">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -70,76 +70,142 @@
     </nav>
 
     <main class="pt-16 pb-16">
-        <section class="pt-16 pb-12 bg-gray-50">
+        <section class="pt-16 pb-10 bg-gray-50">
             <div class="container mx-auto px-4">
                 <div class="max-w-5xl mx-auto">
-                    <h1 class="text-3xl md:text-5xl font-bold mb-4">UAV Auto-aiming Algorithm</h1>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">Algorithm Optimization</span>
-                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">AI</span>
-                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">2025</span>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-black text-white text-[11px] font-medium tracking-widest rounded-full mb-5">
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
+                        OPEN SOURCE · APACHE-2.0
                     </div>
-                    <p class="text-gray-600 text-lg mb-8">
-                        Optimization of UAV system automatic aiming algorithms, including full-stack development, algorithm improvement, and hardware-software integration debugging for unmanned aerial vehicle control systems.
+                    <h1 class="text-3xl md:text-5xl font-bold mb-3">UAV Auto-aiming Algorithm</h1>
+                    <p class="text-gray-500 mb-6">Omni Perception — multi-camera armor detection on ROS2 + OpenVINO</p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">Multi-Camera Perception</span>
+                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">ROS2 · OpenVINO</span>
+                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">C++17</span>
+                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">2026</span>
+                    </div>
+                    <p class="text-gray-600 text-lg mb-8 max-w-3xl leading-relaxed">
+                        The vision front-end of an auto-aiming stack: three USB cameras feed a threaded OpenVINO detector, every armor
+                        plate is lifted to a 3D position with PnP, and the result leaves the process as a ROS2 message before the next
+                        frame arrives.
                     </p>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="https://github.com/bili186/usbcamera_openvino_ros" target="_blank" rel="noopener"
+                           class="inline-flex items-center px-5 py-2.5 bg-black text-white text-sm font-medium rounded-md hover:bg-gray-800 transition duration-300">
+                            <i class="fa fa-github mr-2"></i>Source on GitHub
+                        </a>
+                        <a href="#pipeline"
+                           class="inline-flex items-center px-5 py-2.5 border border-gray-300 text-sm font-medium rounded-md hover:border-gray-900 transition duration-300">
+                            <i class="fa fa-sitemap mr-2"></i>Detection Pipeline
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
         
-        <section class="py-12">
+        <section class="pt-10 pb-2">
             <div class="container mx-auto px-4">
                 <div class="max-w-5xl mx-auto">
-                    <div class="relative cursor-pointer hover:opacity-90 transition-opacity" onclick="openImageViewer('../assets/covers/uav.svg')">
-                        <img src="../assets/covers/uav.svg" alt="UAV Auto-aiming Algorithm" class="w-full h-72 md:h-96 object-cover rounded-lg border border-gray-100">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-300">
-                            <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md opacity-0 hover:opacity-100">
-                                <i class="fa fa-search-plus mr-2"></i>View Large Image
-                            </span>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-px bg-gray-200 border border-gray-200 rounded-xl overflow-hidden">
+                        <div class="bg-white px-5 py-6">
+                            <div class="text-3xl font-bold tracking-tight">3</div>
+                            <div class="text-sm text-gray-500 mt-1">USB cameras</div>
+                            <div class="text-xs text-gray-400 mt-1">left · right · rear</div>
+                        </div>
+                        <div class="bg-white px-5 py-6">
+                            <div class="text-3xl font-bold tracking-tight">60<span class="text-lg font-medium text-gray-400"> fps</span></div>
+                            <div class="text-sm text-gray-500 mt-1">per camera</div>
+                            <div class="text-xs text-gray-400 mt-1">640 × 480 · MJPG</div>
+                        </div>
+                        <div class="bg-white px-5 py-6">
+                            <div class="text-3xl font-bold tracking-tight">0.5<span class="text-lg font-medium text-gray-400"> / 0.4</span></div>
+                            <div class="text-sm text-gray-500 mt-1">confidence / NMS IoU</div>
+                            <div class="text-xs text-gray-400 mt-1">detector thresholds</div>
+                        </div>
+                        <div class="bg-white px-5 py-6">
+                            <div class="text-3xl font-bold tracking-tight">500<span class="text-lg font-medium text-gray-400"> ms</span></div>
+                            <div class="text-sm text-gray-500 mt-1">watchdog window</div>
+                            <div class="text-xs text-gray-400 mt-1">per-camera timeout</div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
         
-        <section class="py-12">
+        <section id="pipeline" class="py-12">
             <div class="container mx-auto px-4">
                 <div class="max-w-5xl mx-auto">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                         <div class="fade-in">
-                            <h2 class="text-2xl font-bold mb-6">Project Overview</h2>
-                            <p class="text-gray-600 mb-6 leading-relaxed">
-                                This project focuses on the intelligent control algorithm optimization of UAVs. I independently completed the target tracking algorithm design, real-time data processing, and hardware-software joint debugging of the drone system.
+                            <h2 class="text-2xl font-bold mb-6">System Overview</h2>
+                            <p class="text-gray-600 mb-5 leading-relaxed">
+                                The job of this module is narrow: given three live views of the field, return the 3D position of every
+                                visible armor plate, tagged with the camera that saw it and how fresh the measurement is. Everything
+                                downstream — aiming, gimbal control — reads only those messages, so the perception process never has to
+                                know what the robot does with them.
+                            </p>
+                            <p class="text-gray-600 mb-5 leading-relaxed">
+                                Cameras are captured on their own threads and hand frames to the detector through a bounded queue, which
+                                is what keeps three 60 fps streams from serialising behind one inference pass. Detections are filtered by
+                                NMS, mapped back to source pixels, then lifted to a metric pose with <code class="text-sm bg-gray-100 px-1.5 py-0.5 rounded">solvePnP</code>;
+                                poses whose reprojection error is too large are discarded rather than published.
                             </p>
                             <p class="text-gray-600 mb-6 leading-relaxed">
-                                The core goal is to improve the accuracy and response speed of the automatic aiming function, enabling the drone to stably track and lock targets in complex environments.
+                                A 500 ms watchdog runs per camera and publishes a separate timeout flag, so a consumer can distinguish
+                                <em>no armor in view</em> from <em>this camera stopped delivering</em> — a distinction that matters when the
+                                aimer has to decide whether to keep tracking a stale target.
                             </p>
                             <h3 class="text-xl font-semibold mb-4 mt-8">Technical Stack</h3>
                             <div class="flex flex-wrap gap-2">
-                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">Python</span>
-                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">C++</span>
-                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">Embedded Development</span>
-                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">Hardware Debugging</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">C++17</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">ROS2 Humble / Iron</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">Intel OpenVINO 2024</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">OpenCV 4</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">colcon / CMake</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">V4L2 · MJPG</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">PnP Pose</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">Apache-2.0</span>
                             </div>
                         </div>
                         
                         <div class="fade-in">
-                            <h2 class="text-2xl font-bold mb-6">Project Process</h2>
-                            <div class="space-y-8">
-                                <div>
-                                    <h3 class="text-xl font-semibold mb-2">Algorithm Design</h3>
-                                    <p class="text-gray-600">Optimized target tracking and automatic aiming algorithms for UAV dynamic scenes.</p>
+                            <h2 class="text-2xl font-bold mb-6">Detection Pipeline</h2>
+                            <div class="space-y-7">
+                                <div class="flex gap-4">
+                                    <div class="mt-0.5 w-7 h-7 shrink-0 rounded-full bg-black text-white text-xs font-semibold flex items-center justify-center">1</div>
+                                    <div>
+                                        <h3 class="font-semibold mb-1">Capture on three threads</h3>
+                                        <p class="text-gray-600 text-sm leading-relaxed">Each camera owns a <code class="text-xs bg-gray-100 px-1 py-0.5 rounded">USBCamera</code> instance: V4L2 backend, MJPG codec, fixed exposure, frames pushed into a bounded timestamped queue.</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 class="text-xl font-semibold mb-2">Software Development</h3>
-                                    <p class="text-gray-600">Implemented real-time data processing and control logic programming.</p>
+                                <div class="flex gap-4">
+                                    <div class="mt-0.5 w-7 h-7 shrink-0 rounded-full bg-black text-white text-xs font-semibold flex items-center justify-center">2</div>
+                                    <div>
+                                        <h3 class="font-semibold mb-1">Stable device identity</h3>
+                                        <p class="text-gray-600 text-sm leading-relaxed"><code class="text-xs bg-gray-100 px-1 py-0.5 rounded">/dev/video*</code> enumeration order is not stable across reboots, so each unit is identified by its sharpness register — 81 left, 82 right, 80 rear.</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 class="text-xl font-semibold mb-2">Hardware Integration</h3>
-                                    <p class="text-gray-600">Completed drone hardware and software integration debugging and testing.</p>
+                                <div class="flex gap-4">
+                                    <div class="mt-0.5 w-7 h-7 shrink-0 rounded-full bg-black text-white text-xs font-semibold flex items-center justify-center">3</div>
+                                    <div>
+                                        <h3 class="font-semibold mb-1">OpenVINO inference</h3>
+                                        <p class="text-gray-600 text-sm leading-relaxed">Letterbox resize keeps the aspect ratio; the compiled model runs on the Intel GPU with CPU fallback; NMS at IoU 0.4 prunes overlaps; boxes are restored to original coordinates.</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 class="text-xl font-semibold mb-2">Performance Optimization</h3>
-                                    <p class="text-gray-600">Improved system response speed and target locking accuracy.</p>
+                                <div class="flex gap-4">
+                                    <div class="mt-0.5 w-7 h-7 shrink-0 rounded-full bg-black text-white text-xs font-semibold flex items-center justify-center">4</div>
+                                    <div>
+                                        <h3 class="font-semibold mb-1">Pose from four corners</h3>
+                                        <p class="text-gray-600 text-sm leading-relaxed">Known plate geometry plus the four projected corners give position and orientation; the reprojection error is checked before a detection is allowed to become a pose.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4">
+                                    <div class="mt-0.5 w-7 h-7 shrink-0 rounded-full bg-black text-white text-xs font-semibold flex items-center justify-center">5</div>
+                                    <div>
+                                        <h3 class="font-semibold mb-1">Publish and timeout</h3>
+                                        <p class="text-gray-600 text-sm leading-relaxed"><code class="text-xs bg-gray-100 px-1 py-0.5 rounded">camera_id</code>, <code class="text-xs bg-gray-100 px-1 py-0.5 rounded">armor_id</code> and the 3D point go out on <code class="text-xs bg-gray-100 px-1 py-0.5 rounded">/armor_detection</code>; the watchdog drives <code class="text-xs bg-gray-100 px-1 py-0.5 rounded">/timeout_status</code>.</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -151,28 +217,42 @@
         <section class="py-12 bg-gray-50">
             <div class="container mx-auto px-4">
                 <div class="max-w-5xl mx-auto">
-                    <h2 class="text-2xl font-bold mb-8">Project Outcomes</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-white p-6 rounded-lg shadow-sm fade-in">
-                            <div class="w-12 h-12 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa fa-rocket text-accent text-xl"></i>
+                    <h2 class="text-2xl font-bold mb-2">System Architecture</h2>
+                    <p class="text-gray-500 text-sm mb-8 max-w-2xl">
+                        Three capture threads, one inference stage, two published topics. The queue between capture and inference is the
+                        only place where the 60 fps camera rate and the model rate have to agree.
+                    </p>
+                    <div class="bg-white border border-gray-200 rounded-xl p-5 md:p-6 fade-in">
+                        <div class="flex flex-col md:flex-row items-stretch gap-2">
+                            <div class="flex-1 rounded-lg bg-gray-50 border border-gray-200 px-4 py-4">
+                                <div class="text-[10px] tracking-widest text-gray-400 mb-2">INPUT</div>
+                                <div class="font-semibold text-sm mb-1">3× USB camera</div>
+                                <div class="text-[11px] text-gray-500 leading-relaxed">V4L2 · MJPG<br>640×480 @ 60 fps</div>
                             </div>
-                            <h3 class="text-lg font-semibold mb-2">Algorithm Accuracy</h3>
-                            <p class="text-gray-600">Target locking accuracy increased by 30% in complex flight environments.</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-lg shadow-sm fade-in" style="transition-delay: 0.2s;">
-                            <div class="w-12 h-12 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa fa-bolt text-accent text-xl"></i>
+                            <div class="flex items-center justify-center text-gray-300 md:w-6 shrink-0"><span class="md:hidden">↓</span><span class="hidden md:inline">→</span></div>
+                            <div class="flex-1 rounded-lg bg-gray-50 border border-gray-200 px-4 py-4">
+                                <div class="text-[10px] tracking-widest text-gray-400 mb-2">CAPTURE</div>
+                                <div class="font-semibold text-sm mb-1">3 threads + queue</div>
+                                <div class="text-[11px] text-gray-500 leading-relaxed">bounded, timestamped<br>auto-reconnect daemon</div>
                             </div>
-                            <h3 class="text-lg font-semibold mb-2">Response Speed</h3>
-                            <p class="text-gray-600">System response time reduced by 25% for real-time control.</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-lg shadow-sm fade-in" style="transition-delay: 0.4s;">
-                            <div class="w-12 h-12 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa fa-cogs text-accent text-xl"></i>
+                            <div class="flex items-center justify-center text-gray-300 md:w-6 shrink-0"><span class="md:hidden">↓</span><span class="hidden md:inline">→</span></div>
+                            <div class="flex-1 rounded-lg bg-black px-4 py-4">
+                                <div class="text-[10px] tracking-widest text-gray-500 mb-2">INFERENCE</div>
+                                <div class="font-semibold text-sm mb-1 text-white">OpenVINO detector</div>
+                                <div class="text-[11px] text-gray-400 leading-relaxed">letterbox · NMS 0.4<br>PnP · error gate</div>
                             </div>
-                            <h3 class="text-lg font-semibold mb-2">System Stability</h3>
-                            <p class="text-gray-600">Successfully completed hardware-software integration and stable operation.</p>
+                            <div class="flex items-center justify-center text-gray-300 md:w-6 shrink-0"><span class="md:hidden">↓</span><span class="hidden md:inline">→</span></div>
+                            <div class="flex-1 rounded-lg bg-gray-50 border border-gray-200 px-4 py-4">
+                                <div class="text-[10px] tracking-widest text-gray-400 mb-2">PUBLISH</div>
+                                <div class="font-semibold text-sm mb-1">ROS2 node</div>
+                                <div class="text-[11px] text-gray-500 leading-relaxed">armor_msgs<br>500 ms watchdog</div>
+                            </div>
+                            <div class="flex items-center justify-center text-gray-300 md:w-6 shrink-0"><span class="md:hidden">↓</span><span class="hidden md:inline">→</span></div>
+                            <div class="flex-1 rounded-lg bg-gray-50 border border-gray-200 px-4 py-4">
+                                <div class="text-[10px] tracking-widest text-gray-400 mb-2">CONSUMER</div>
+                                <div class="font-semibold text-sm mb-1">Aimer / control</div>
+                                <div class="text-[11px] text-gray-500 leading-relaxed">/armor_detection<br>/timeout_status</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -181,17 +261,157 @@
         
         <section class="py-12">
             <div class="container mx-auto px-4">
-                <h2 class="text-2xl font-bold mb-10 text-center">Related Projects</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                    <div class="work-card bg-white rounded-lg overflow-hidden shadow-sm group fade-in">
-                        <div class="relative overflow-hidden">
-                            <img src="../assets/covers/reid-multimodal.svg" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-8">Specification</h2>
+                    <div class="border-t border-gray-200">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4 py-4 border-b border-gray-200">
+                            <div class="text-sm font-medium text-gray-500">Cameras</div>
+                            <div class="sm:col-span-2 text-sm text-gray-700">3 × USB — left, right and rear — V4L2 backend, MJPG codec</div>
                         </div>
-                        <div class="p-4">
-                            <h3 class="font-semibold mb-1">Multimodal Person Re-ID</h3>
-                            <a href="work2.html" class="text-accent text-sm font-medium hover:underline">View Project</a>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4 py-4 border-b border-gray-200">
+                            <div class="text-sm font-medium text-gray-500">Stream</div>
+                            <div class="sm:col-span-2 text-sm text-gray-700">640 × 480 @ 60 fps, fixed exposure −7, gain 0, gamma 100</div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4 py-4 border-b border-gray-200">
+                            <div class="text-sm font-medium text-gray-500">Device identity</div>
+                            <div class="sm:col-span-2 text-sm text-gray-700">Bound by the driver's sharpness register — left 81, right 82, rear 80 — not by device path</div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4 py-4 border-b border-gray-200">
+                            <div class="text-sm font-medium text-gray-500">Detector</div>
+                            <div class="sm:col-span-2 text-sm text-gray-700">4point_v3_5.onnx exported to OpenVINO IR; Intel GPU by default, CPU fallback</div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4 py-4 border-b border-gray-200">
+                            <div class="text-sm font-medium text-gray-500">Thresholds</div>
+                            <div class="sm:col-span-2 text-sm text-gray-700">Confidence 0.5, NMS IoU 0.4 — both exposed in camera_config.yaml</div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4 py-4 border-b border-gray-200">
+                            <div class="text-sm font-medium text-gray-500">Pose</div>
+                            <div class="sm:col-span-2 text-sm text-gray-700">solvePnP on the four plate corners; reprojection error gates publication</div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4 py-4 border-b border-gray-200">
+                            <div class="text-sm font-medium text-gray-500">Watchdog</div>
+                            <div class="sm:col-span-2 text-sm text-gray-700">500 ms per camera, configurable in perception.hpp</div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4 py-4 border-b border-gray-200">
+                            <div class="text-sm font-medium text-gray-500">Messages</div>
+                            <div class="sm:col-span-2 text-sm text-gray-700">armor_msgs — ArmorDetection, TimeoutStatus, OmniTarget</div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4 py-4 border-b border-gray-200">
+                            <div class="text-sm font-medium text-gray-500">Build</div>
+                            <div class="sm:col-span-2 text-sm text-gray-700">C++17, CMake ≥ 3.10, colcon; ROS2 Humble or Iron on Ubuntu 22.04</div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4 py-4">
+                            <div class="text-sm font-medium text-gray-500">License</div>
+                            <div class="sm:col-span-2 text-sm text-gray-700">Apache-2.0</div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-2">Implementation Notes</h2>
+                    <p class="text-gray-500 text-sm mb-8 max-w-2xl">Four decisions that shaped the code more than the choice of model did.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="bg-white p-6 rounded-lg border border-gray-200 fade-in">
+                            <h3 class="font-semibold mb-2">A queue, not a lock</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed">Capture and inference run at different rates. A bounded, timestamped queue per camera means a slow inference pass never blocks a capture thread, and a camera that outruns the detector cannot grow memory without limit.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg border border-gray-200 fade-in" style="transition-delay: 0.1s;">
+                            <h3 class="font-semibold mb-2">Identity by register</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed">Reboots reshuffle <code class="text-xs bg-gray-100 px-1 py-0.5 rounded">/dev/video*</code>, so the node reads each camera's sharpness value back from the driver and binds roles to that number. No udev rules, no manual re-plugging before a match.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg border border-gray-200 fade-in" style="transition-delay: 0.2s;">
+                            <h3 class="font-semibold mb-2">Reject, don't guess</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed">A box that survives NMS can still fail geometry. Poses above the reprojection-error bound are dropped, so the aimer receives no target instead of a plausible-looking wrong one.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg border border-gray-200 fade-in" style="transition-delay: 0.3s;">
+                            <h3 class="font-semibold mb-2">Timeout is its own signal</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed">"No armor in view" and "this camera stopped delivering" are different failures. Publishing the second on its own topic keeps the consumer from treating a dead USB link as an empty field.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-2">Build &amp; Run</h2>
+                    <p class="text-gray-500 text-sm mb-8 max-w-2xl">Two packages in a ROS2 workspace: the message definitions and the perception node.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-5">
+                        <div class="md:col-span-3">
+                            <div class="text-xs font-medium tracking-widest text-gray-400 mb-2">TERMINAL</div>
+                            <pre class="bg-gray-900 text-gray-100 rounded-lg p-5 text-[11px] md:text-[12px] leading-relaxed overflow-x-auto"><code>cd ~/ros2_ws/src
+git clone https://github.com/bili186/usbcamera_openvino_ros.git
+cd ~/ros2_ws
+source /opt/ros/humble/setup.bash
+colcon build --packages-select armor_msgs omni_perception
+source install/setup.bash
+ros2 run omni_perception omni_perception
+
+# inspect what the node publishes
+ros2 topic echo /armor_detection
+ros2 topic echo /timeout_status</code></pre>
+                        </div>
+                        <div class="md:col-span-2">
+                            <div class="text-xs font-medium tracking-widest text-gray-400 mb-2">CONFIG · camera_config.yaml</div>
+                            <pre class="bg-gray-900 text-gray-100 rounded-lg p-5 text-[11px] md:text-[12px] leading-relaxed overflow-x-auto"><code>camera:
+  image_width: 640
+  image_height: 480
+  usb_frame_rate: 60
+  usb_exposure: -7
+  devices:
+    left:    { sharpness: 81 }
+    right:   { sharpness: 82 }
+    behind:  { sharpness: 80 }
+
+detection:
+  confidence_threshold: 0.5
+  iou_threshold: 0.4</code></pre>
+                        </div>
+                    </div>
+                    <div class="mt-8 flex flex-wrap items-center gap-3 text-sm">
+                        <span class="text-gray-500">Keyboard:</span>
+                        <span class="px-2 py-1 bg-gray-100 rounded text-xs font-mono">1</span><span class="text-xs text-gray-500">cam 1</span>
+                        <span class="px-2 py-1 bg-gray-100 rounded text-xs font-mono">2</span><span class="text-xs text-gray-500">cam 2</span>
+                        <span class="px-2 py-1 bg-gray-100 rounded text-xs font-mono">3</span><span class="text-xs text-gray-500">cam 3</span>
+                        <span class="px-2 py-1 bg-gray-100 rounded text-xs font-mono">0</span><span class="text-xs text-gray-500">split view</span>
+                        <span class="px-2 py-1 bg-gray-100 rounded text-xs font-mono">q</span><span class="text-xs text-gray-500">quit</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pt-4 pb-16">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto border-t border-gray-200 pt-10">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                        <div>
+                            <h2 class="text-lg font-semibold mb-2">Still on the roadmap</h2>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">Kalman filter tracking</span>
+                                <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">TF2 coordinate transforms</span>
+                                <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">YOLOv8 / v10 export</span>
+                                <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">Launch files</span>
+                                <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">Auto-exposure calibration</span>
+                            </div>
+                        </div>
+                        <a href="https://github.com/bili186/usbcamera_openvino_ros" target="_blank" rel="noopener"
+                           class="inline-flex items-center justify-center px-6 py-3 bg-black text-white text-sm font-medium rounded-md hover:bg-gray-800 transition duration-300 shrink-0">
+                            <i class="fa fa-github mr-2"></i>View Repository
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12">
+            <div class="container mx-auto px-4">
+                <h2 class="text-2xl font-bold mb-10 text-center">Related Projects</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
                     <div class="work-card bg-white rounded-lg overflow-hidden shadow-sm group fade-in" style="transition-delay: 0.2s;">
                         <img src="../assets/covers/thyroid.svg" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
                         <div class="p-4">

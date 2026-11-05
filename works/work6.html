@@ -1,8 +1,8 @@
 <html lang="zh-CN"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Re-ID Interpretability | Xu Zhe</title>
-    <meta name="description" content="Re-ID interpretability: a multimodal ReID model that produces decision explanations alongside its predictions.">
+    <title>GLAW · Multimodal Person Re-ID | Xu Zhe</title>
+    <meta name="description" content="GLAW: global-local agreement-weighted dual-feature learning for text-based person search. Cross-modal token selection, agreement-weighted TAL, feature denoising and EMA centroids on CLIP ViT-B/16.">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -37,10 +37,13 @@
         ::-webkit-scrollbar-thumb:hover {background: #555;}
         .image-viewer {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background-color: rgba(0, 0, 0, 0.9);z-index: 100;justify-content: center;align-items: center;}
         .image-viewer.active {display: flex;}
-        .image-viewer img {max-width: 90%;max-height: 90%;object-fit: contain;}
-        .image-viewer-close {position: absolute;top: 20px;right: 20px;color: white;font-size: 30px;cursor: pointer;}
+        .image-viewer img {max-width: 92%;max-height: 92%;object-fit: contain;}
+        .image-viewer-close {position: absolute;top: 20px;right: 26px;color: white;font-size: 34px;cursor: pointer;}
         .fade-in {opacity: 0;transform: translateY(20px);transition: opacity 0.6s ease-out, transform 0.6s ease-out;}
         .fade-in.active {opacity: 1;transform: translateY(0);}
+        .result-table th, .result-table td {padding: 0.7rem 0.9rem;white-space: nowrap;}
+        .result-table thead th {font-size: 0.75rem;letter-spacing: 0.04em;text-transform: uppercase;color: #6b7280;font-weight: 600;}
+        .result-table tbody tr + tr {border-top: 1px solid #eef0f3;}
     </style>
 </head>
 <body class="bg-white text-primary font-sans">
@@ -54,7 +57,7 @@
                     <a href="../index.html#about" class="text-secondary hover:text-accent transition-colors">About</a>
                     <a href="../index.html#contact" class="text-secondary hover:text-accent transition-colors">Contact</a>
                 </div>
-                <button id="menu-toggle" class="md:hidden ml-auto text-primary focus:outline-none">
+                <button id="menu-toggle" class="md:hidden ml-auto text-primary focus:outline-none" aria-label="Toggle navigation">
                     <i class="fa fa-bars text-xl"></i>
                 </button>
             </div>
@@ -70,137 +73,405 @@
     </nav>
 
     <main class="pt-16 pb-16">
-        <section class="pt-16 pb-12 bg-gray-50">
+        <section class="pt-16 pb-10 bg-gray-50">
             <div class="container mx-auto px-4">
                 <div class="max-w-5xl mx-auto">
-                    <h1 class="text-3xl md:text-5xl font-bold mb-4">Re-ID Interpretability Research</h1>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">Academic Research</span>
-                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">AI Interpretability</span>
-                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">2025</span>
+                    <p class="text-xs tracking-widest text-accent font-semibold mb-4">MULTIMODAL PERSON RE-ID &middot; FIRST-AUTHOR MANUSCRIPT</p>
+                    <div class="flex items-center gap-4 mb-4">
+                        <img src="../assets/images/glaw_logo.svg" alt="GLAW" class="w-14 h-14 md:w-16 md:h-16 shrink-0">
+                        <h1 class="text-3xl md:text-5xl font-bold leading-tight">GLAW</h1>
                     </div>
-                    <p class="text-gray-600 text-lg mb-8">
-                        First author of academic research paper on the interpretability of multimodal person re-identification models, exploring the decision-making mechanism of deep learning models.
+                    <p class="text-lg md:text-xl text-gray-500 mb-6">Global&ndash;Local Agreement-Weighted Dual-Feature Learning for Text-Based Person Search</p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">Text-Based Person Search</span>
+                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">Vision-Language</span>
+                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">CLIP ViT-B/16</span>
+                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">PyTorch</span>
+                    </div>
+                    <p class="text-gray-600 text-lg mb-8 max-w-3xl">
+                        Text-based person search retrieves a person from a gallery using a sentence, not a photo. A single CLIP
+                        embedding averages the whole image and the whole sentence into one vector, so the attributes that separate
+                        two look-alike pedestrians are the first thing to disappear. GLAW keeps both views &mdash; a global branch over
+                        the full pair and a local branch over the 30% of patches and words that cross-modal attention marks as
+                        discriminative &mdash; and lets each pair's own agreement decide how much each branch is trusted.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="https://github.com/bili186/GLAW" target="_blank" rel="noopener"
+                           class="inline-flex items-center px-6 py-3 bg-black text-white text-sm font-medium rounded-md hover:bg-gray-800 transition">
+                            <i class="fa fa-github mr-2"></i>Code
+                        </a>
+                        <a href="#results"
+                           class="inline-flex items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-md hover:bg-gray-100 transition">
+                            <i class="fa fa-table mr-2"></i>Results
+                        </a>
+                        <a href="#method"
+                           class="inline-flex items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-md hover:bg-gray-100 transition">
+                            <i class="fa fa-cubes mr-2"></i>Method
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white border border-gray-100 p-6 rounded-lg shadow-sm fade-in">
+                            <p class="text-3xl font-bold">74.27</p>
+                            <p class="text-sm text-gray-500 mt-1">CUHK-PEDES &middot; t2i R@1</p>
+                        </div>
+                        <div class="bg-white border border-gray-100 p-6 rounded-lg shadow-sm fade-in" style="transition-delay: 0.15s;">
+                            <p class="text-3xl font-bold">65.82</p>
+                            <p class="text-sm text-gray-500 mt-1">ICFG-PEDES &middot; t2i R@1</p>
+                        </div>
+                        <div class="bg-white border border-gray-100 p-6 rounded-lg shadow-sm fade-in" style="transition-delay: 0.3s;">
+                            <p class="text-3xl font-bold">65.60</p>
+                            <p class="text-sm text-gray-500 mt-1">RSTPReid &middot; t2i R@1</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-4">CLIP ViT-B/16, 384&times;128, 60 epochs, one model per dataset. Text-to-image mAP is 66.36 / 39.22 / 50.89 on the same three splits.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="pb-4">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <figure class="relative cursor-pointer" onclick="openImageViewer('../assets/images/glaw_retrieval.png')">
+                        <img src="../assets/images/glaw_retrieval.png" alt="Top-10 text-to-image retrieval results on RSTPReid for two queries, correct matches in green and wrong matches in red" class="w-full h-auto rounded-lg border border-gray-100 bg-white">
+                        <div class="absolute inset-0 flex items-end justify-end p-3 pointer-events-none">
+                            <span class="px-3 py-1.5 bg-white bg-opacity-95 border border-gray-200 text-xs font-medium rounded-md text-secondary shadow-sm">
+                                <i class="fa fa-search-plus mr-1"></i>Enlarge
+                            </span>
+                        </div>
+                    </figure>
+                    <figcaption class="text-sm text-gray-500 mt-4 leading-relaxed">
+                        Top-10 retrievals on RSTPReid for two queries. Green marks the described identity, red marks a different
+                        person. Both rows get ranks 1&ndash;3 right; past that the list fills with other pedestrians in red outerwear.
+                        Colour is the easy cue &mdash; the backpack, the luggage, the boots are the ones a global embedding drops.
+                    </figcaption>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="fade-in">
+                        <h2 class="text-2xl font-bold mb-6">The Problem</h2>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            TBPS is a fine-grained retrieval task: the query names garment type, colour, carried objects and
+                            sometimes gait, and the gallery holds tens of thousands of cropped pedestrians. Scoring is a single
+                            text-to-image cosine, ranked over the whole gallery.
+                        </p>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            CLIP compresses a 77-token sentence and a 24&times;8 patch grid into one 512-d vector per side. What
+                            survives that pooling is the dominant semantics &mdash; usually the colour and the coarse pose. What
+                            is lost is precisely what separates identity A from a near-duplicate B.
+                        </p>
+                        <p class="text-gray-600 leading-relaxed">
+                            Patch and token features still carry the detail, but concatenating them naively adds more noise than
+                            signal: most patches are background, most tokens are function words.
+                        </p>
+                    </div>
+
+                    <div class="fade-in">
+                        <h2 class="text-2xl font-bold mb-6">The Idea</h2>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            Keep two branches under one objective. The global branch is CLIP's own CLS / EOS embedding. The local
+                            branch pools only the top-k patches and tokens ranked by cross-modal attention, so the local view is
+                            conditioned on the <em>pair</em> rather than on the image alone.
+                        </p>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            Then weight by agreement. When both branches place a pair at the same similarity, the label is
+                            unambiguous and that pair is trustworthy supervision; when the two disagree, the pair is down-weighted
+                            instead of being trusted. Agreement is a sigmoid over the mean of the two similarities, detached, and
+                            it multiplies each branch's TAL loss.
+                        </p>
+                        <p class="text-gray-600 leading-relaxed">
+                            Finally, denoise. A similarity that survives Gaussian perturbation of its inputs is a stable one, so FDR
+                            matches noisy and clean similarity with an MSE and leaves the rest of the geometry alone.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-2">System Architecture</h2>
+                    <p class="text-gray-500 text-sm mb-8 max-w-2xl">
+                        One forward pass produces four feature sets and three losses. Token selection is the only place where the
+                        image and the sentence are allowed to look at each other before scoring.
+                    </p>
+                    <div class="bg-white border border-gray-200 rounded-xl p-5 md:p-6 fade-in">
+                        <div class="flex flex-col md:flex-row items-stretch gap-2">
+                            <div class="flex-1 rounded-lg bg-gray-50 border border-gray-200 px-4 py-4">
+                                <div class="text-[10px] tracking-widest text-gray-400 mb-2">INPUT</div>
+                                <div class="font-semibold text-sm mb-1">image + caption</div>
+                                <div class="text-[11px] text-gray-500 leading-relaxed">384&times;128 &middot; 77 tokens<br>24&times;8 = 192 patches</div>
+                            </div>
+                            <div class="flex items-center justify-center text-gray-300 md:w-6 shrink-0"><span class="md:hidden">↓</span><span class="hidden md:inline">→</span></div>
+                            <div class="flex-1 rounded-lg bg-gray-50 border border-gray-200 px-4 py-4">
+                                <div class="text-[10px] tracking-widest text-gray-400 mb-2">ENCODERS</div>
+                                <div class="font-semibold text-sm mb-1">CLIP ViT-B/16</div>
+                                <div class="text-[11px] text-gray-500 leading-relaxed">CLS / EOS 512-d<br>attention maps returned</div>
+                            </div>
+                            <div class="flex items-center justify-center text-gray-300 md:w-6 shrink-0"><span class="md:hidden">↓</span><span class="hidden md:inline">→</span></div>
+                            <div class="flex-1 rounded-lg bg-black px-4 py-4">
+                                <div class="text-[10px] tracking-widest text-gray-500 mb-2">CMATS</div>
+                                <div class="font-semibold text-sm mb-1 text-white">top-30% selection</div>
+                                <div class="text-[11px] text-gray-400 leading-relaxed">57 patches &middot; 22 words<br>&alpha; = 0.5 cross-modal</div>
+                            </div>
+                            <div class="flex items-center justify-center text-gray-300 md:w-6 shrink-0"><span class="md:hidden">↓</span><span class="hidden md:inline">→</span></div>
+                            <div class="flex-1 rounded-lg bg-gray-50 border border-gray-200 px-4 py-4">
+                                <div class="text-[10px] tracking-widest text-gray-400 mb-2">OBJECTIVE</div>
+                                <div class="font-semibold text-sm mb-1">GLAW + FDR + centroid</div>
+                                <div class="text-[11px] text-gray-500 leading-relaxed">global &amp; local TAL<br>joint, single forward</div>
+                            </div>
+                            <div class="flex items-center justify-center text-gray-300 md:w-6 shrink-0"><span class="md:hidden">↓</span><span class="hidden md:inline">→</span></div>
+                            <div class="flex-1 rounded-lg bg-gray-50 border border-gray-200 px-4 py-4">
+                                <div class="text-[10px] tracking-widest text-gray-400 mb-2">SCORING</div>
+                                <div class="font-semibold text-sm mb-1">cosine, global branch</div>
+                                <div class="text-[11px] text-gray-500 leading-relaxed">R@1 / R@5 / R@10<br>mAP &middot; mINP</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="method" class="py-12">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-2">Four Moving Parts</h2>
+                    <p class="text-gray-500 text-sm mb-8 max-w-2xl">
+                        Two change what the model sees, two change what the gradient rewards.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="border border-gray-100 rounded-lg p-6 bg-white shadow-sm fade-in">
+                            <div class="flex items-baseline justify-between mb-2">
+                                <h3 class="font-semibold">CMATS</h3>
+                                <span class="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-500">selection</span>
+                            </div>
+                            <p class="text-sm text-gray-500 mb-3">Cross-modal attention-guided token selection</p>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-3">
+                                Both encoders already return their attention: the image side gives CLS&rarr;patch importance, the
+                                text side gives EOS&rarr;token importance. A patch&times;token similarity from two linear projections
+                                is softmaxed over tokens, weighted by the text-token importance and summed, producing a per-patch
+                                cross-modal score.
+                            </p>
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                The final importance is the encoder's own attention plus &alpha;&nbsp;=&nbsp;0.5 times the
+                                cross-modal term, and the top 30% is kept &mdash; 57 of 192 patches, 22 of 75 words.
+                            </p>
+                        </div>
+
+                        <div class="border border-gray-100 rounded-lg p-6 bg-white shadow-sm fade-in" style="transition-delay: 0.15s;">
+                            <div class="flex items-baseline justify-between mb-2">
+                                <h3 class="font-semibold">GLAW loss</h3>
+                                <span class="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-500">objective</span>
+                            </div>
+                            <p class="text-sm text-gray-500 mb-3">Agreement-weighted dual TAL</p>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-3">
+                                Two TAL losses &mdash; one on the global pair, one on the token-selected pair &mdash; each a
+                                temperature-softmax triplet with &tau;&nbsp;=&nbsp;0.015 and margin 0.1.
+                            </p>
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                Each pair is then scaled by
+                                <span style="font-family:Georgia,'Times New Roman',serif;font-style:italic">sigmoid((cos<sub>g</sub> + cos<sub>l</sub>)/2)</span>,
+                                computed with the gradient stopped. Pairs the two views agree on carry more weight; ambiguous pairs
+                                are not trusted twice.
+                            </p>
+                        </div>
+
+                        <div class="border border-gray-100 rounded-lg p-6 bg-white shadow-sm fade-in" style="transition-delay: 0.3s;">
+                            <div class="flex items-baseline justify-between mb-2">
+                                <h3 class="font-semibold">FDR</h3>
+                                <span class="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-500">regulariser</span>
+                            </div>
+                            <p class="text-sm text-gray-500 mb-3">Feature denoising regularization</p>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-3">
+                                Gaussian noise at &sigma;&nbsp;=&nbsp;0.1 is added to the bypass features and the noisy and clean
+                                cosine similarities are matched with an MSE, on both branches, weighted 1.0.
+                            </p>
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                The target is the similarity rather than the vector, so the penalty is on unstable geometry instead
+                                of on distance to a fixed point.
+                            </p>
+                        </div>
+
+                        <div class="border border-gray-100 rounded-lg p-6 bg-white shadow-sm fade-in" style="transition-delay: 0.45s;">
+                            <div class="flex items-baseline justify-between mb-2">
+                                <h3 class="font-semibold">Centroid loss</h3>
+                                <span class="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-500">regulariser</span>
+                            </div>
+                            <p class="text-sm text-gray-500 mb-3">EMA class centroids</p>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-3">
+                                One centroid per identity, updated with momentum 0.99, and only from samples whose agreement exceeds
+                                0.5 (falling back to 0.3 when an identity has nothing cleaner in the batch).
+                            </p>
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                The pull term is <span style="font-family:Georgia,'Times New Roman',serif;font-style:italic">1 &minus; cos</span>
+                                weighted by the same agreement score, at weight 0.5. Image and text features of an identity share the
+                                centroid, so the two modalities are pulled to the same place.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="results" class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-3">Results</h2>
+                    <p class="text-gray-600 mb-8 max-w-3xl">
+                        Text-to-image retrieval on the three standard TBPS benchmarks, CLIP ViT-B/16 at 384&times;128 for 60 epochs.
+                        All numbers are this implementation's own runs; no baseline is re-trained here.
+                    </p>
+                    <div class="overflow-x-auto rounded-lg border border-gray-100 bg-white">
+                        <table class="result-table w-full text-sm text-left">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th>Dataset</th>
+                                    <th class="text-right">R@1</th>
+                                    <th class="text-right">R@5</th>
+                                    <th class="text-right">R@10</th>
+                                    <th class="text-right">mAP</th>
+                                    <th class="text-right">mINP</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-700">
+                                <tr>
+                                    <td class="font-medium">CUHK-PEDES</td>
+                                    <td class="text-right font-semibold">74.27</td>
+                                    <td class="text-right">89.80</td>
+                                    <td class="text-right">94.15</td>
+                                    <td class="text-right">66.36</td>
+                                    <td class="text-right">50.06</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-medium">ICFG-PEDES</td>
+                                    <td class="text-right font-semibold">65.82</td>
+                                    <td class="text-right">81.24</td>
+                                    <td class="text-right">86.77</td>
+                                    <td class="text-right">39.22</td>
+                                    <td class="text-right">7.66</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-medium">RSTPReid</td>
+                                    <td class="text-right font-semibold">65.60</td>
+                                    <td class="text-right">83.80</td>
+                                    <td class="text-right">90.30</td>
+                                    <td class="text-right">50.89</td>
+                                    <td class="text-right">28.13</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-4">
+                        ICFG-PEDES is the hardest of the three on ranking quality &mdash; mAP 39.22 and mINP 7.66, against 66.36 / 50.06
+                        on CUHK-PEDES. R@1 holds up while the tail of the ranking does not.
                     </p>
                 </div>
             </div>
         </section>
-        
+
         <section class="py-12">
             <div class="container mx-auto px-4">
-                <div class="max-w-5xl mx-auto">
-                    <div class="relative cursor-pointer hover:opacity-90 transition-opacity" onclick="openImageViewer('../assets/covers/reid-interpretability.svg')">
-                        <img src="../assets/covers/reid-interpretability.svg" alt="Re-ID Interpretability" class="w-full h-72 md:h-96 object-cover rounded-lg border border-gray-100">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-300">
-                            <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md opacity-0 hover:opacity-100">
-                                <i class="fa fa-search-plus mr-2"></i>View Large Image
-                            </span>
+                <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="fade-in">
+                        <h2 class="text-2xl font-bold mb-6">Implementation</h2>
+                        <ul class="space-y-3 text-gray-600 text-sm leading-relaxed">
+                            <li><span class="font-medium text-primary">Backbone</span> &mdash; CLIP ViT-B/16, images resized to 384&times;128 with stride 16, captions truncated at 77 tokens.</li>
+                            <li><span class="font-medium text-primary">Optimisation</span> &mdash; Adam (&beta; 0.9/0.999, eps 1e-3), weight decay 4e-5, cosine annealing after a 5-epoch linear warmup, 60 epochs.</li>
+                            <li><span class="font-medium text-primary">Learning rates</span> &mdash; 1e-5 base; the two randomly initialised embedding layers run at 1e-3, and any module with <code class="text-xs bg-gray-100 px-1 py-0.5 rounded">cross</code> in its name gets 5&times; the base.</li>
+                            <li><span class="font-medium text-primary">Data</span> &mdash; CUHK-PEDES (11,003 identities), ICFG-PEDES, RSTPReid; random sampler by default, identity sampler with 4 instances per ID available; optional crop/erase and text augmentation.</li>
+                            <li><span class="font-medium text-primary">Selection</span> &mdash; evaluated every epoch on the test split, keeping the checkpoint with the best t2i R@1.</li>
+                        </ul>
+                        <h3 class="text-xl font-semibold mb-4 mt-10">Technical Stack</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm">PyTorch</span>
+                            <span class="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm">OpenAI CLIP</span>
+                            <span class="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm">Metric Learning</span>
+                            <span class="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm">Distributed Data Parallel</span>
+                            <span class="px-3 py-1 bg-white border border-gray-200 rounded-full text-sm">MIT License</span>
                         </div>
+                    </div>
+                    <div class="fade-in">
+                        <h2 class="text-2xl font-bold mb-6">Reproducing</h2>
+                        <pre class="bg-primary text-gray-100 text-[12px] leading-relaxed rounded-lg p-5 overflow-x-auto"><code>git clone https://github.com/bili186/GLAW.git
+cd GLAW
+pip install -r requirements.txt
+mkdir -p logs
+
+python train.py \
+  --name GLAW_centroid \
+  --dataset_name RSTPReid \
+  --loss_names glaw \
+  --num_epoch 60 \
+  --batch_size 64 \
+  --lr 5e-6 \
+  --tau 0.015 \
+  --margin 0.1 \
+  --select_ratio 0.3 \
+  --cm_alpha 0.5 \
+  --fdr_weight 1.0 \
+  --centroid_weight 0.5 \
+  --root_dir data</code></pre>
+                        <p class="text-sm text-gray-500 mt-4 mb-2">Datasets go under <code class="text-xs bg-gray-100 px-1 py-0.5 rounded">data/&lt;name&gt;</code> with the image folder and annotation JSON listed in the repository README.</p>
+                        <pre class="bg-primary text-gray-100 text-[12px] leading-relaxed rounded-lg p-5 overflow-x-auto"><code>python test.py --config_file \
+  logs/RSTPReid/&lt;run&gt;/configs.yaml</code></pre>
                     </div>
                 </div>
             </div>
         </section>
-        
-        <section class="py-12">
-            <div class="container mx-auto px-4">
-                <div class="max-w-5xl mx-auto">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                        <div class="fade-in">
-                            <h2 class="text-2xl font-bold mb-6">Research Overview</h2>
-                            <p class="text-gray-600 mb-6 leading-relaxed">
-                                This academic research focuses on the interpretability of multimodal person re-identification models. As the first author, I completed the theoretical research, experimental design and paper writing.
-                            </p>
-                            <p class="text-gray-600 mb-6 leading-relaxed">
-                                The research reveals the feature selection and decision-making mechanism of deep learning models in ReID tasks, providing a theoretical basis for the application and optimization of multimodal models.
-                            </p>
-                            <h3 class="text-xl font-semibold mb-4 mt-8">Research Fields</h3>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">AI Interpretability</span>
-                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">Multimodal Learning</span>
-                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">ReID</span>
-                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">Academic Research</span>
-                            </div>
-                        </div>
-                        
-                        <div class="fade-in">
-                            <h2 class="text-2xl font-bold mb-6">Research Process</h2>
-                            <div class="space-y-8">
-                                <div>
-                                    <h3 class="text-xl font-semibold mb-2">Theoretical Research</h3>
-                                    <p class="text-gray-600">Studied the theory of deep learning model interpretability.</p>
-                                </div>
-                                <div>
-                                    <h3 class="text-xl font-semibold mb-2">Experimental Design</h3>
-                                    <p class="text-gray-600">Designed visualization experiments for multimodal ReID model features.</p>
-                                </div>
-                                <div>
-                                    <h3 class="text-xl font-semibold mb-2">Data Analysis</h3>
-                                    <p class="text-gray-600">Analyzed model decision-making logic and feature contribution.</p>
-                                </div>
-                                <div>
-                                    <h3 class="text-xl font-semibold mb-2">Paper Writing</h3>
-                                    <p class="text-gray-600">Completed the research paper as the first author.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
+
         <section class="py-12 bg-gray-50">
             <div class="container mx-auto px-4">
                 <div class="max-w-5xl mx-auto">
-                    <h2 class="text-2xl font-bold mb-8">Research Outcomes</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-white p-6 rounded-lg shadow-sm fade-in">
-                            <div class="w-12 h-12 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa fa-file-text-o text-accent text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold mb-2">Academic Paper</h3>
-                            <p class="text-gray-600">Published research paper as the first author.</p>
+                    <h2 class="text-2xl font-bold mb-3">Notes from the Source</h2>
+                    <p class="text-gray-600 mb-8 max-w-3xl">
+                        Four things worth knowing before reading the numbers, all of them visible in the code rather than the paper.
+                    </p>
+                    <div class="border-t border-gray-200">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4 py-4 border-b border-gray-200">
+                            <div class="text-sm font-medium text-gray-500">Scoring branch</div>
+                            <div class="sm:col-span-2 text-sm text-gray-700">The returned similarity matrix comes from the global features. CMATS shapes the representation during training; the local branch is not fused into the test-time score.</div>
                         </div>
-                        <div class="bg-white p-6 rounded-lg shadow-sm fade-in" style="transition-delay: 0.2s;">
-                            <div class="w-12 h-12 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa fa-lightbulb-o text-accent text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold mb-2">Theoretical Innovation</h3>
-                            <p class="text-gray-600">Revealed the interpretability mechanism of multimodal ReID models.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4 py-4 border-b border-gray-200">
+                            <div class="text-sm font-medium text-gray-500">Noise applied twice</div>
+                            <div class="sm:col-span-2 text-sm text-gray-700">In training mode all four feature sets are perturbed by &sigma; = 0.1 before any loss is computed, and the FDR term draws a second independent sample for its MSE target.</div>
                         </div>
-                        <div class="bg-white p-6 rounded-lg shadow-sm fade-in" style="transition-delay: 0.4s;">
-                            <div class="w-12 h-12 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa fa-graduation-cap text-accent text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold mb-2">Research Ability</h3>
-                            <p class="text-gray-600">Improved academic research and independent innovation ability.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4 py-4 border-b border-gray-200">
+                            <div class="text-sm font-medium text-gray-500">Detached agreement</div>
+                            <div class="sm:col-span-2 text-sm text-gray-700">In the GLAW loss the agreement weight is detached, so it scales the gradient instead of opening a second path back through the similarities.</div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4 py-4">
+                            <div class="text-sm font-medium text-gray-500">Centroids</div>
+                            <div class="sm:col-span-2 text-sm text-gray-700">They live in a plain dictionary rather than a registered buffer, so a resumed run starts empty and rebuilds them over its first epochs.</div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        
+
         <section class="py-12">
             <div class="container mx-auto px-4">
                 <h2 class="text-2xl font-bold mb-10 text-center">Related Projects</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                    <div class="work-card bg-white rounded-lg overflow-hidden shadow-sm group fade-in">
-                        <div class="relative overflow-hidden">
-                            <img src="../assets/covers/reid-multimodal.svg" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="font-semibold mb-1">Multimodal Person Re-ID</h3>
-                            <a href="work2.html" class="text-accent text-sm font-medium hover:underline">View Project</a>
-                        </div>
-                    </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
                     <div class="work-card bg-white rounded-lg overflow-hidden shadow-sm group fade-in" style="transition-delay: 0.2s;">
-                        <img src="../assets/covers/mathmodel.svg" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="../assets/covers/mathmodel.svg" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110" alt="Math Modeling Competitions">
                         <div class="p-4">
                             <h3 class="font-semibold mb-1">Math Modeling Competitions</h3>
                             <a href="work5.html" class="text-accent text-sm font-medium hover:underline">View Project</a>
                         </div>
                     </div>
                     <div class="work-card bg-white rounded-lg overflow-hidden shadow-sm group fade-in" style="transition-delay: 0.4s;">
-                        <img src="../assets/covers/thyroid.svg" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="../assets/covers/thyroid.svg" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110" alt="Thyroid Carcinoma Classification">
                         <div class="p-4">
                             <h3 class="font-semibold mb-1">Thyroid Carcinoma Classification</h3>
                             <a href="work3.html" class="text-accent text-sm font-medium hover:underline">View Project</a>

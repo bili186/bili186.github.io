@@ -39,8 +39,18 @@ A modern, minimalist portfolio website for showcasing academic research, AI proj
 ---
 
 ## 📁 Project Categories
-- Artificial Intelligence & Multimodal Models
+- Metric Learning & Face Recognition (RipPLE, under review)
+- Multimodal Re-Identification
 - Medical Image Classification
 - Computer Vision Applications
 - Mathematical Modeling Competitions
 - Academic Research & Papers
+
+---
+
+## 🖼️ Assets
+- `assets/covers/` — 6 project cover plates numbered 01–06, hand-authored SVG (vector, ~2500–5300 bytes each), no external dependencies. The retired `reid-interpretability.svg` plate is kept only for the archived page and no longer appears in the grid
+- `assets/images/` — portrait, architecture diagram, and the RipPLE paper figures taken from the paper repository
+- `assets/favicon.svg` — site icon
+
+All covers are inline-vector so they stay sharp at any density and can be edited in place. To swap a cover for a real screenshot, drop the file in `assets/covers/` and update the matching `src`.
