@@ -1,9 +1,8 @@
 <html lang="zh-CN"><head>
-    <meta name="robots" content="noindex, nofollow">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Re-ID Interpretability | Xu Zhe</title>
-    <meta name="description" content="Multimodal person re-identification: text-to-image pedestrian retrieval built on BLIP/CLIP cross-modal fusion.">
+    <title>Weld Image Recognition | Xu Zhe</title>
+    <meta name="description" content="Weld image recognition: YOLOv5 defect detection on a self-built dataset, reaching 86% accuracy.">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -74,14 +73,14 @@
         <section class="pt-16 pb-12 bg-gray-50">
             <div class="container mx-auto px-4">
                 <div class="max-w-5xl mx-auto">
-                    <h1 class="text-3xl md:text-5xl font-bold mb-4">Re-ID Interpretability</h1>
+                    <h1 class="text-3xl md:text-5xl font-bold mb-4">Weld Image Recognition</h1>
                     <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">Multimodal AI</span>
                         <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">Computer Vision</span>
+                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">YOLO</span>
                         <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">2025</span>
                     </div>
                     <p class="text-gray-600 text-lg mb-8">
-                        Implemented text/image cross-modal search for person re-identification based on BLIP/CLIP multimodal fusion technology, breaking through the limitations of traditional single-modal ReID.
+                        Industrial weld defect detection system based on YOLOv5, with 86% recognition accuracy on self-built weld image dataset.
                     </p>
                 </div>
             </div>
@@ -90,8 +89,8 @@
         <section class="py-12">
             <div class="container mx-auto px-4">
                 <div class="max-w-5xl mx-auto">
-                    <div class="relative cursor-pointer hover:opacity-90 transition-opacity" onclick="openImageViewer('../assets/images/流程图.png')">
-                        <img src="../assets/images/流程图.png" alt="Re-ID Interpretability" class="w-full h-auto rounded-lg">
+                    <div class="relative cursor-pointer hover:opacity-90 transition-opacity" onclick="openImageViewer('../assets/covers/weld.svg')">
+                        <img src="../assets/covers/weld.svg" alt="Weld Image Recognition" class="w-full h-72 md:h-96 object-cover rounded-lg border border-gray-100">
                         <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-300">
                             <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md opacity-0 hover:opacity-100">
                                 <i class="fa fa-search-plus mr-2"></i>View Large Image
@@ -109,17 +108,17 @@
                         <div class="fade-in">
                             <h2 class="text-2xl font-bold mb-6">Project Overview</h2>
                             <p class="text-gray-600 mb-6 leading-relaxed">
-                                This project applies multimodal large models (BLIP/CLIP) to person re-identification tasks, realizing cross-modal retrieval between text descriptions and pedestrian images.
+                                This project applies YOLOv5 target detection algorithm to industrial weld defect recognition, realizing automatic detection of weld cracks, pores and other defects.
                             </p>
                             <p class="text-gray-600 mb-6 leading-relaxed">
-                                The system supports natural language description search (e.g., "red clothes, black pants") to match pedestrian images, greatly improving the flexibility and practicality of ReID.
+                                I independently completed dataset production, model training, optimization and deployment, providing an intelligent detection solution for industrial welding quality control.
                             </p>
                             <h3 class="text-xl font-semibold mb-4 mt-8">Technical Stack</h3>
                             <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">YOLOv5</span>
                                 <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">PyTorch</span>
-                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">BLIP</span>
-                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">CLIP</span>
-                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">Multimodal Fusion</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">OpenCV</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">Industrial Vision</span>
                             </div>
                         </div>
                         
@@ -127,20 +126,20 @@
                             <h2 class="text-2xl font-bold mb-6">Project Process</h2>
                             <div class="space-y-8">
                                 <div>
-                                    <h3 class="text-xl font-semibold mb-2">Model Selection</h3>
-                                    <p class="text-gray-600">Adopted BLIP and CLIP multimodal pre-trained models for feature extraction.</p>
+                                    <h3 class="text-xl font-semibold mb-2">Dataset Building</h3>
+                                    <p class="text-gray-600">Collected and annotated 5000+ industrial weld defect images.</p>
                                 </div>
                                 <div>
-                                    <h3 class="text-xl font-semibold mb-2">Feature Fusion</h3>
-                                    <p class="text-gray-600">Implemented text-image feature fusion and similarity calculation algorithm.</p>
+                                    <h3 class="text-xl font-semibold mb-2">Model Training</h3>
+                                    <p class="text-gray-600">Trained YOLOv5 model for multi-class weld defect detection.</p>
                                 </div>
                                 <div>
-                                    <h3 class="text-xl font-semibold mb-2">Dataset Training</h3>
-                                    <p class="text-gray-600">Fine-tuned the model on public pedestrian ReID datasets.</p>
+                                    <h3 class="text-xl font-semibold mb-2">Model Optimization</h3>
+                                    <p class="text-gray-600">Adjusted model parameters to improve detection accuracy and speed.</p>
                                 </div>
                                 <div>
                                     <h3 class="text-xl font-semibold mb-2">System Deployment</h3>
-                                    <p class="text-gray-600">Built a complete cross-modal retrieval system for pedestrian search.</p>
+                                    <p class="text-gray-600">Deployed the detection system for industrial field application.</p>
                                 </div>
                             </div>
                         </div>
@@ -156,24 +155,24 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="bg-white p-6 rounded-lg shadow-sm fade-in">
                             <div class="w-12 h-12 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa fa-image text-accent text-xl"></i>
+                                <i class="fa fa-check-circle text-accent text-xl"></i>
                             </div>
-                            <h3 class="text-lg font-semibold mb-2">Retrieval Accuracy</h3>
-                            <p class="text-gray-600">mAP increased by 22% compared with traditional single-modal ReID methods.</p>
+                            <h3 class="text-lg font-semibold mb-2">Detection Accuracy</h3>
+                            <p class="text-gray-600">86% mAP on self-built industrial weld defect dataset.</p>
                         </div>
                         <div class="bg-white p-6 rounded-lg shadow-sm fade-in" style="transition-delay: 0.2s;">
                             <div class="w-12 h-12 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa fa-comment text-accent text-xl"></i>
+                                <i class="fa fa-industry text-accent text-xl"></i>
                             </div>
-                            <h3 class="text-lg font-semibold mb-2">Cross-modal Search</h3>
-                            <p class="text-gray-600">Realized natural language text to image pedestrian retrieval function.</p>
+                            <h3 class="text-lg font-semibold mb-2">Industrial Value</h3>
+                            <p class="text-gray-600">Realized automatic weld quality inspection for manufacturing.</p>
                         </div>
                         <div class="bg-white p-6 rounded-lg shadow-sm fade-in" style="transition-delay: 0.4s;">
                             <div class="w-12 h-12 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa fa-rocket text-accent text-xl"></i>
+                                <i class="fa fa-clock-o text-accent text-xl"></i>
                             </div>
-                            <h3 class="text-lg font-semibold mb-2">Practical Value</h3>
-                            <p class="text-gray-600">Can be applied to security monitoring, pedestrian tracking and other scenarios.</p>
+                            <h3 class="text-lg font-semibold mb-2">Efficiency Improvement</h3>
+                            <p class="text-gray-600">Reduced manual detection time by 60% for welding production lines.</p>
                         </div>
                     </div>
                 </div>
@@ -186,25 +185,25 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
                     <div class="work-card bg-white rounded-lg overflow-hidden shadow-sm group fade-in">
                         <div class="relative overflow-hidden">
-                            <img src="../assets/covers/uav.svg" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                            <img src="../assets/covers/thyroid.svg" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
                         </div>
                         <div class="p-4">
-                            <h3 class="font-semibold mb-1">UAV Auto-aiming Algorithm</h3>
-                            <a href="work1.html" class="text-accent text-sm font-medium hover:underline">View Project</a>
+                            <h3 class="font-semibold mb-1">Thyroid Carcinoma Classification</h3>
+                            <a href="thyroid.html" class="text-accent text-sm font-medium hover:underline">View Project</a>
                         </div>
                     </div>
                     <div class="work-card bg-white rounded-lg overflow-hidden shadow-sm group fade-in" style="transition-delay: 0.2s;">
-                        <img src="../assets/covers/thyroid.svg" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="../assets/covers/mathmodel.svg" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
                         <div class="p-4">
-                            <h3 class="font-semibold mb-1">Thyroid Carcinoma Classification</h3>
-                            <a href="work3.html" class="text-accent text-sm font-medium hover:underline">View Project</a>
+                            <h3 class="font-semibold mb-1">Math Modeling Competitions</h3>
+                            <a href="mathmodel.html" class="text-accent text-sm font-medium hover:underline">View Project</a>
                         </div>
                     </div>
                     <div class="work-card bg-white rounded-lg overflow-hidden shadow-sm group fade-in" style="transition-delay: 0.4s;">
-                        <img src="../assets/covers/reid-multimodal.svg" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="../assets/covers/uav.svg" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
                         <div class="p-4">
-                            <h3 class="font-semibold mb-1">Multimodal Person Re-ID</h3>
-                            <a href="work6.html" class="text-accent text-sm font-medium hover:underline">View Project</a>
+                            <h3 class="font-semibold mb-1">UAV Auto-aiming Algorithm</h3>
+                            <a href="uav.html" class="text-accent text-sm font-medium hover:underline">View Project</a>
                         </div>
                     </div>
                 </div>
