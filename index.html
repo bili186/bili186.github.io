@@ -397,34 +397,34 @@
                     <div class="bg-white p-8 rounded-lg shadow-sm">
                         <h3 class="text-2xl font-semibold mb-6">Send a Message</h3>
 
-                        <form id="contact-form" class="space-y-6" action="https://formsubmit.co/xuzhe1@mails.neu.edu.cn" method="POST">
-                            <!-- 托管表单（Formsubmit）配置字段 -->
+                        <!-- 托管表单：Formspree。端点就是 action 里的 https://formspree.io/f/<FORM_ID>，
+                             换账号只需改这一处，脚本会自动读取 action，不需要改 JS -->
+                        <form id="contact-form" class="space-y-6" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
                             <input type="hidden" name="_subject" value="【Portfolio Contact】New message from bili186.github.io">
-                            <input type="hidden" name="_template" value="table">
-                            <input type="hidden" name="_captcha" value="false">
+                            <!-- 无 JS 时的整页 POST 回跳地址 -->
                             <input type="hidden" name="_next" value="https://bili186.github.io/?sent=1">
-                            <!-- 蜜罐字段：正常访客看不到也不会填，被机器人填写即静默丢弃 -->
-                            <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+                            <!-- 蜜罐：Formspree 的 _gotcha，机器人填了就静默丢弃 -->
+                            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                                    <input type="text" id="name" name="Name" required autocomplete="name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent">
+                                    <input type="text" id="name" name="name" required autocomplete="name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent">
                                 </div>
                                 <div>
                                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                    <input type="email" id="email" name="Email" required autocomplete="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent">
+                                    <input type="email" id="email" name="email" required autocomplete="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent">
                                 </div>
                             </div>
                             
                             <div>
                                 <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
-                                <input type="text" id="subject" name="Subject" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent">
+                                <input type="text" id="subject" name="subject" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent">
                             </div>
                             
                             <div>
                                 <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                                <textarea id="message" name="Message" rows="5" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"></textarea>
+                                <textarea id="message" name="message" rows="5" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"></textarea>
                             </div>
 
                             <p id="form-status" role="status" aria-live="polite" class="hidden text-sm rounded-md px-4 py-3"></p>
@@ -595,19 +595,17 @@
                 });
             }
             
-            // 表单提交处理（托管表单：Formsubmit → 直接投递到邮箱）
-            // 想换成 Formspree：把上面 form 的 action 改成 https://formspree.io/f/<FORM_ID> 即可，
-            // 下面的 AJAX 端点会自动跟着变（formspree 用 action 本身，formsubmit 用 /ajax/ 子路径）。
+            // 表单提交处理（托管表单：Formspree）
+            // 端点只存在一处 —— form 的 action；脚本直接读它，换账号只改 HTML，不动 JS。
             const contactForm = document.getElementById('contact-form');
 
             if (contactForm) {
                 const statusEl = document.getElementById('form-status');
                 const submitBtn = document.getElementById('contact-submit');
                 const submitText = submitBtn ? submitBtn.textContent.trim() : 'Send Message';
-                const isFormspree = contactForm.action.indexOf('formspree.io') !== -1;
-                const ajaxEndpoint = isFormspree
-                    ? contactForm.action
-                    : contactForm.action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+                const endpoint = (contactForm.getAttribute('action') || '').trim();
+                // 端点仍是 YOUR_FORM_ID 占位时视为未配置，宁可提示也不要发到不存在的表单
+                const configured = /^https:\/\/formspree\.io\/f\/[A-Za-z0-9]{6,}$/.test(endpoint);
 
                 const setStatus = function(type, text) {
                     if (!statusEl) return;
@@ -636,51 +634,59 @@
                         return;
                     }
 
+                    if (!configured) {
+                        setStatus('err', 'This form is not connected yet — please try again later.');
+                        return;
+                    }
+
                     const payload = {
-                        Name: name,
-                        Email: email,
-                        Subject: subject,
-                        Message: message,
+                        name: name,
+                        email: email,
+                        subject: subject,
+                        message: message,
                         _subject: '【Portfolio】' + subject
                     };
 
                     setBusy(true);
                     setStatus('ok', 'Sending…');
 
-                    fetch(ajaxEndpoint, {
+                    fetch(endpoint, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                         body: JSON.stringify(payload)
                     })
                     .then(function(res) {
                         return res.json().catch(function() { return {}; }).then(function(data) {
-                            return { ok: res.ok, data: data };
+                            return { ok: res.ok, status: res.status, data: data };
                         });
                     })
                     .then(function(r) {
-                        // formsubmit: {success:"true"} / {success:"false", message:"..."}
-                        // formspree:  200 + {ok:true} 或 4xx + {errors:[...]}
-                        const failed = !r.ok || String(r.data.success) === 'false' || (r.data.ok === false);
-                        if (failed) {
-                            const msg = r.data.message
-                                || (r.data.errors && r.data.errors.length && r.data.errors[0].message)
-                                || 'The form service rejected the message.';
+                        // Formspree: 成功 200 + {ok:true}；失败 4xx + {errors:[{field,message}]}
+                        if (!r.ok || r.data.ok === false) {
+                            let msg = r.data.message;
+                            if (!msg && r.data.errors && r.data.errors.length) {
+                                msg = r.data.errors.map(function(x) { return x.message; }).filter(Boolean).join('; ');
+                            }
+                            if (!msg) {
+                                msg = r.status === 429
+                                    ? 'Too many messages from this address — please try again later.'
+                                    : 'The form service returned an error (HTTP ' + r.status + ').';
+                            }
                             throw new Error(msg);
                         }
                         setStatus('ok', 'Message sent — thank you! I will reply to ' + email + ' soon.');
                         contactForm.reset();
                     })
                     .catch(function(err) {
-                        setStatus('err', 'Could not send: ' + err.message);
-                        // 兜底：普通的整页 POST（form.submit() 不会再触发本监听器）
-                        window.setTimeout(function() { contactForm.submit(); }, 1500);
+                        // 不再整页跳转：网络或服务异常时留在页面里，让访客能直接重试
+                        setStatus('err', 'Could not send: ' + err.message + ' You can retry in a moment.');
                     })
                     .then(function() {
                         setBusy(false);
                     });
                 });
 
-                // 原生 POST 回跳（?sent=1）时给出确认
+                // 无 JS 的整页 POST 回跳（?sent=1）时给出确认
                 if (new URLSearchParams(window.location.search).get('sent') === '1') {
                     setStatus('ok', 'Message sent — thank you!');
                     if (window.history.replaceState) {
