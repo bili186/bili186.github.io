@@ -24,9 +24,9 @@ A modern, minimalist portfolio website for showcasing academic research, AI proj
 ## ✉️ Contact Form
 The form in `index.html` (`#contact-form`) posts to a hosted form service, so the message lands in the inbox even if the visitor has no mail client configured.
 
-- **Endpoint**: `action="https://formspree.io/f/<FORM_ID>"`. This is the only place the endpoint lives — the script reads it and posts to it directly, so changing accounts means editing one attribute.
-- **Not configured yet**: the attribute currently holds the placeholder `YOUR_FORM_ID`. The submit handler detects that and refuses to post, showing "This form is not connected yet", so a visitor never fires a message at a non-existent form.
-- **First run**: Formspree emails a confirmation link on the first submission; messages start arriving after it is clicked. Free plan allows 50 submissions per month.
+- **Endpoint**: `action="https://formspree.io/f/moeebbvk"`. This is the only place the endpoint lives — the script reads it and posts to it directly, so changing accounts means editing one attribute.
+- **Guard rail**: the submit handler validates the attribute against `^https://formspree\.io/f/[A-Za-z0-9]{6,}$`. If anyone later swaps in a placeholder or a malformed URL, it refuses to post and shows "This form is not connected yet" instead of firing at a dead endpoint.
+- **Verified end-to-end**: a real submission from the page in headless Chrome returned HTTP 200 with `{"ok":true}` in ~1.5 s, the green confirmation banner rendered, the button returned to its idle state and the fields cleared. Free plan allows 50 submissions per month.
 - **Failure behaviour**: errors stay on the page as a red status line (no redirect), and the fields keep their contents so the visitor can retry. Only a browser with JavaScript disabled does a native form POST, returning via `_next` to `?sent=1`.
 - **Spam**: a hidden `_gotcha` honeypot field is sent; Formspree silently drops submissions that fill it.
 - **Why not Formsubmit**: it was the original choice (no signup needed), but its origin went down — every request returned Cloudflare 522 for 20 s. Formspree is reachable and was verified end-to-end from this machine.
