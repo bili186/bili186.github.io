@@ -674,7 +674,7 @@
                             }
                             throw new Error(msg);
                         }
-                        setStatus('ok', 'Message sent — thank you! I will reply to ' + email + ' soon.');
+                        setStatus('ok', 'Message received — thanks! I will reply to ' + email + ' within 24–48 hours.');
                         contactForm.reset();
                     })
                     .catch(function(err) {
@@ -688,7 +688,7 @@
 
                 // 无 JS 的整页 POST 回跳（?sent=1）时给出确认
                 if (new URLSearchParams(window.location.search).get('sent') === '1') {
-                    setStatus('ok', 'Message sent — thank you!');
+                    setStatus('ok', 'Message received — thanks! I will reply within 24–48 hours.');
                     if (window.history.replaceState) {
                         window.history.replaceState({}, '', window.location.pathname + '#contact');
                     }
