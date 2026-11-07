@@ -100,6 +100,144 @@
                 </div>
             </div>
         </section>
+
+        <!-- 数据集与模型 -->
+        <section class="py-12">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-2">Dataset &amp; Model</h2>
+                    <p class="text-gray-500 text-sm mb-8 max-w-3xl">
+                        Two classes, cut from the same staining protocol: tissue containing follicular carcinoma and normal
+                        thyroid tissue. The slides were screened, cleaned and labelled by hand, then classified with a
+                        DenseNet backbone.
+                    </p>
+
+                    <figure class="bg-white border border-gray-200 rounded-xl p-4 md:p-6 fade-in">
+                        <div class="flex flex-col md:flex-row gap-6 items-start">
+                            <div class="relative cursor-pointer group w-full md:w-[460px] md:shrink-0 rounded-lg overflow-hidden border border-gray-100"
+                                 onclick="openImageViewer('../assets/images/thyroid_densenet.png')">
+                                <img src="../assets/images/thyroid_densenet.png"
+                                     alt="DenseNet architecture: an input stack feeds four dense blocks x0 to x4, each separated by a BN-ReLU-Conv transition layer, with skip connections running from every block to the ones after it"
+                                     width="744" height="536" loading="lazy" class="w-full block">
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300">
+                                    <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        <i class="fa fa-search-plus mr-2"></i>View Large Image
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-lg font-semibold mb-3">Why DenseNet</h3>
+                                <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                                    A dense block concatenates every feature map onto the ones that follow it, so the
+                                    classifier sees low-level texture and high-level structure side by side instead of
+                                    through a chain of downsampling. Each layer only has to learn what the earlier ones did
+                                    not already capture.
+                                </p>
+                                <p class="text-sm text-gray-600 leading-relaxed">
+                                    On a small histology set that reuse does the work a much larger dataset would otherwise
+                                    do: the transition layers between blocks keep the map count from exploding while the
+                                    skip connections keep the fine detail alive.
+                                </p>
+                                <div class="mt-5 pt-4 border-t border-gray-100">
+                                    <h4 class="text-xs uppercase tracking-wider text-gray-400 mb-2">At a glance</h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-3 py-1 bg-gray-100 rounded-full text-xs">DenseNet</span>
+                                        <span class="px-3 py-1 bg-gray-100 rounded-full text-xs">2 classes</span>
+                                        <span class="px-3 py-1 bg-gray-100 rounded-full text-xs">PyTorch</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <figcaption class="mt-5 pt-4 border-t border-gray-100 text-xs text-gray-500 leading-relaxed">
+                            The backbone as drawn for the project review: four dense blocks, a BN-ReLU-Conv transition
+                            layer between each pair, and skip connections carrying every earlier block forward. Reference:
+                            Huang et al., <em>Densely Connected Convolutional Networks</em> (arXiv:1608.06993).
+                        </figcaption>
+                    </figure>
+
+                    <div class="bg-white border border-gray-200 rounded-xl p-5 md:p-6 mt-6 fade-in">
+                        <h3 class="text-lg font-semibold mb-4">How the data was prepared</h3>
+                        <ul class="grid grid-cols-1 md:grid-cols-3 gap-5 text-sm text-gray-600 leading-relaxed">
+                            <li class="flex gap-3">
+                                <i class="fa fa-filter text-accent mt-1"></i>
+                                <span><strong class="text-gray-900">Clean</strong> &mdash; the raw slides were screened
+                                before anything was labelled; what could not be called confidently by eye was dropped, not
+                                guessed.</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <i class="fa fa-tags text-accent mt-1"></i>
+                                <span><strong class="text-gray-900">Label</strong> &mdash; each frame carries its class as a
+                                text label, so the folder name and the annotation never drift apart.</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <i class="fa fa-random text-accent mt-1"></i>
+                                <span><strong class="text-gray-900">Split</strong> &mdash; the set is cut into train /
+                                validation / test, and every number below is reported on the held-out part.</span>
+                            </li>
+                        </ul>
+                        <p class="text-xs text-gray-400 mt-5 pt-4 border-t border-gray-100 leading-relaxed">
+                            The same collect &rarr; train &rarr; validate &rarr; deploy order used for the weld project, run
+                            here as a two-class task: the point of the exercise was the pipeline, not a leaderboard entry.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 准确率曲线 -->
+        <section class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-2">Results</h2>
+                    <p class="text-gray-500 text-sm mb-8 max-w-3xl">
+                        Test accuracy per epoch, plotted straight from the training log &mdash; no smoothing, one point
+                        per epoch.
+                    </p>
+
+                    <figure class="bg-white border border-gray-200 rounded-xl p-4 md:p-6 fade-in">
+                        <div class="flex flex-col sm:flex-row gap-6">
+                            <div class="relative cursor-pointer group w-full max-w-[400px] mx-auto sm:mx-0 sm:w-[400px] shrink-0 self-start rounded-lg overflow-hidden border border-gray-100"
+                                 onclick="openImageViewer('../assets/images/thyroid_accuracy.png')">
+                                <img src="../assets/images/thyroid_accuracy.png"
+                                     alt="Line chart titled Test Accuracy per Epoch: the score starts at 0.906, dips to 0.901 at epoch 15, then climbs to a peak of 0.936 at epoch 21 before settling near 0.93"
+                                     width="492" height="370" loading="lazy" class="w-full block">
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300">
+                                    <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        <i class="fa fa-search-plus mr-2"></i>View Large Image
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex-1 flex flex-col">
+                                <h3 class="text-lg font-semibold mb-3">What the curve says</h3>
+                                <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                                    Accuracy never drops below 0.90 and never climbs past 0.936, over twenty-five epochs.
+                                    The model is right about nine times in ten from the very first epoch; the remaining
+                                    points of error are what the rest of the run spends its time on.
+                                </p>
+                                <p class="text-sm text-gray-600 leading-relaxed">
+                                    Two dips &mdash; 0.904 at epoch 7 and 0.901 at epoch 15 &mdash; recover within two
+                                    epochs each. On a set this small one hard frame moves the test average by half a point,
+                                    which is why the line reads as noise around a plateau rather than as learning.
+                                </p>
+                                <div class="mt-auto pt-4">
+                                    <h4 class="text-xs uppercase tracking-wider text-gray-400 mb-2">At a glance</h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-3 py-1 bg-gray-100 rounded-full text-xs">DenseNet</span>
+                                        <span class="px-3 py-1 bg-gray-100 rounded-full text-xs">25 epochs</span>
+                                        <span class="px-3 py-1 bg-gray-100 rounded-full text-xs">Peak 0.936</span>
+                                        <span class="px-3 py-1 bg-gray-100 rounded-full text-xs">92% reported accuracy</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <figcaption class="mt-5 pt-4 border-t border-gray-100 text-xs text-gray-500 leading-relaxed">
+                            The 92% quoted under Project Outcomes is the plateau this curve settles on, not a single lucky
+                            epoch: the last five points sit between 0.926 and 0.930.
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
         
         <section class="py-12">
             <div class="container mx-auto px-4">
