@@ -190,6 +190,55 @@
             </div>
         </section>
 
+        <!-- 检测结果（定性） -->
+        <section class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-2">Qualitative Results</h2>
+                    <p class="text-gray-500 text-sm mb-8 max-w-3xl">
+                        Sixteen frames from the captured set with the trained detector run over them &mdash; the seams look
+                        nothing alike, and the box finds the seam in every one of them.
+                    </p>
+
+                    <figure class="bg-white border border-gray-200 rounded-xl p-4 md:p-6 fade-in">
+                        <div class="flex flex-col md:flex-row gap-6 items-start">
+                            <img src="../assets/images/weld_detections.png"
+                                 alt="Sixteen weld frames in a four by four contact sheet, each with an orange bounding box drawn along the weld seam and a small label above it"
+                                 width="687" height="351" loading="lazy"
+                                 class="w-full md:w-[400px] md:shrink-0 rounded border border-gray-100">
+                            <div class="flex-1">
+                                <h3 class="text-lg font-semibold mb-3">What the boxes show</h3>
+                                <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                                    The tiles deliberately disagree with each other: a bright arc-lit seam here, a dull grey
+                                    joint there, plate oiled in one frame and ground clean in the next. The box follows the
+                                    seam line rather than the brightest ridge in the frame &mdash; which is the point, because
+                                    a threshold on grey level is exactly what it replaced.
+                                </p>
+                                <p class="text-sm text-gray-600 leading-relaxed">
+                                    The frames worth studying are the ones where the seam runs out of view or disappears
+                                    under spatter: the box stretches to cover what is left. Those are the cases to open when
+                                    the model is wrong, since the mistake shows up in the picture long before it shows up in
+                                    any metric.
+                                </p>
+                                <div class="mt-5 pt-4 border-t border-gray-100">
+                                    <h4 class="text-xs uppercase tracking-wider text-gray-400 mb-2">At a glance</h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-3 py-1 bg-gray-100 rounded-full text-xs">16 frames</span>
+                                        <span class="px-3 py-1 bg-gray-100 rounded-full text-xs">YOLOv5 inference</span>
+                                        <span class="px-3 py-1 bg-gray-100 rounded-full text-xs">1 box per frame</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <figcaption class="mt-5 pt-4 border-t border-gray-100 text-xs text-gray-500 leading-relaxed">
+                            Every tile is an unedited capture with the detector's box and label left on: glare, spatter and
+                            motion blur are all still there, because that is what the camera actually sees on the line.
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
         <section class="py-12">
             <div class="container mx-auto px-4">
                 <div class="max-w-5xl mx-auto">
