@@ -222,39 +222,21 @@
                         Three capture threads, one inference stage, two published topics. The queue between capture and inference is the
                         only place where the 60 fps camera rate and the model rate have to agree.
                     </p>
-                    <div class="bg-white border border-gray-200 rounded-xl p-5 md:p-6 fade-in">
-                        <div class="flex flex-col md:flex-row items-stretch gap-2">
-                            <div class="flex-1 rounded-lg bg-gray-50 border border-gray-200 px-4 py-4">
-                                <div class="text-[10px] tracking-widest text-gray-400 mb-2">INPUT</div>
-                                <div class="font-semibold text-sm mb-1">3× USB camera</div>
-                                <div class="text-[11px] text-gray-500 leading-relaxed">V4L2 · MJPG<br>640×480 @ 60 fps</div>
-                            </div>
-                            <div class="flex items-center justify-center text-gray-300 md:w-6 shrink-0"><span class="md:hidden">↓</span><span class="hidden md:inline">→</span></div>
-                            <div class="flex-1 rounded-lg bg-gray-50 border border-gray-200 px-4 py-4">
-                                <div class="text-[10px] tracking-widest text-gray-400 mb-2">CAPTURE</div>
-                                <div class="font-semibold text-sm mb-1">3 threads + queue</div>
-                                <div class="text-[11px] text-gray-500 leading-relaxed">bounded, timestamped<br>auto-reconnect daemon</div>
-                            </div>
-                            <div class="flex items-center justify-center text-gray-300 md:w-6 shrink-0"><span class="md:hidden">↓</span><span class="hidden md:inline">→</span></div>
-                            <div class="flex-1 rounded-lg bg-black px-4 py-4">
-                                <div class="text-[10px] tracking-widest text-gray-500 mb-2">INFERENCE</div>
-                                <div class="font-semibold text-sm mb-1 text-white">OpenVINO detector</div>
-                                <div class="text-[11px] text-gray-400 leading-relaxed">letterbox · NMS 0.4<br>PnP · error gate</div>
-                            </div>
-                            <div class="flex items-center justify-center text-gray-300 md:w-6 shrink-0"><span class="md:hidden">↓</span><span class="hidden md:inline">→</span></div>
-                            <div class="flex-1 rounded-lg bg-gray-50 border border-gray-200 px-4 py-4">
-                                <div class="text-[10px] tracking-widest text-gray-400 mb-2">PUBLISH</div>
-                                <div class="font-semibold text-sm mb-1">ROS2 node</div>
-                                <div class="text-[11px] text-gray-500 leading-relaxed">armor_msgs<br>500 ms watchdog</div>
-                            </div>
-                            <div class="flex items-center justify-center text-gray-300 md:w-6 shrink-0"><span class="md:hidden">↓</span><span class="hidden md:inline">→</span></div>
-                            <div class="flex-1 rounded-lg bg-gray-50 border border-gray-200 px-4 py-4">
-                                <div class="text-[10px] tracking-widest text-gray-400 mb-2">CONSUMER</div>
-                                <div class="font-semibold text-sm mb-1">Aimer / control</div>
-                                <div class="text-[11px] text-gray-500 leading-relaxed">/armor_detection<br>/timeout_status</div>
-                            </div>
+                    <figure class="bg-white border border-gray-200 rounded-xl p-4 md:p-6 fade-in">
+                        <div class="overflow-x-auto">
+                            <img src="../assets/images/uav_pipeline.svg"
+                                 alt="Pipeline flowchart: three USB cameras feed a bounded queue, the OpenVINO detector returns boxes, solvePnP lifts them to a pose, a reprojection-error gate decides whether the pose is published on /armor_detection, and a 500 ms watchdog publishes /timeout_status when a camera stalls."
+                                 width="1200" height="560" loading="lazy"
+                                 style="min-width: 680px; width: 100%; height: auto;">
                         </div>
-                    </div>
+                        <div class="sm:hidden mt-2 text-[11px] text-gray-400 text-right">scroll the diagram sideways &rarr;</div>
+                        <figcaption class="mt-4 pt-3 border-t border-gray-100 text-xs text-gray-500 leading-relaxed">
+                            Solid arrows carry frames and detections; dashed arrows carry health and control signals. A pose reaches
+                            <code class="text-[11px] bg-gray-100 px-1 py-0.5 rounded">/armor_detection</code> only when the reprojection
+                            error clears the gate &mdash; a bad pose is dropped rather than published, so the aimer never sees a
+                            confidently wrong target. On narrow screens the diagram scrolls horizontally.
+                        </figcaption>
+                    </figure>
                 </div>
             </div>
         </section>

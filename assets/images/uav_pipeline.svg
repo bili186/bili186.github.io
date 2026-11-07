@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560" role="img" aria-label="Detection pipeline flowchart: three USB cameras, a bounded queue, OpenVINO detection, solvePnP pose with a reprojection gate, ROS2 publication, and a 500 ms timeout watchdog">
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#14161a"/></marker>
+<marker id="ar-mute" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#8f98a4"/></marker>
+<marker id="ar-acc" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#0f8a8a"/></marker>
+</defs>
+<rect width="1200" height="560" fill="#ffffff"/>
+<rect x="32" y="64" width="250" height="98" rx="10" fill="#ffffff" stroke="#d8dde5" stroke-width="1.2"/>
+<text x="50" y="97" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="600" fill="#14161a">3 &#215; USB camera</text>
+<text x="50" y="121" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" fill="#6b7280">V4L2 &#183; MJPG</text>
+<text x="50" y="139" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" fill="#6b7280">640 &#215; 480 @ 60 fps</text>
+<text x="266" y="86" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="10" letter-spacing="1.6" fill="#c2c8d2" text-anchor="end">01</text>
+<rect x="332" y="64" width="250" height="98" rx="10" fill="#ffffff" stroke="#d8dde5" stroke-width="1.2"/>
+<text x="350" y="97" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="600" fill="#14161a">Capture &#183; 3 threads</text>
+<text x="350" y="121" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" fill="#6b7280">one USBCamera each</text>
+<text x="350" y="139" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" fill="#6b7280">timestamped frames</text>
+<text x="566" y="86" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="10" letter-spacing="1.6" fill="#c2c8d2" text-anchor="end">02</text>
+<rect x="632" y="64" width="250" height="98" rx="10" fill="#ffffff" stroke="#d8dde5" stroke-width="1.2"/>
+<text x="650" y="97" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="600" fill="#14161a">Bounded queue</text>
+<text x="650" y="121" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" fill="#6b7280">drops oldest when full</text>
+<text x="650" y="139" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" fill="#6b7280">60 fps &#8800; model rate</text>
+<text x="866" y="86" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="10" letter-spacing="1.6" fill="#c2c8d2" text-anchor="end">03</text>
+<rect x="932" y="64" width="236" height="98" rx="10" fill="#ffffff" stroke="#d8dde5" stroke-width="1.2"/>
+<text x="950" y="97" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="600" fill="#14161a">OpenVINO detector</text>
+<text x="950" y="121" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" fill="#6b7280">letterbox &#183; NMS IoU 0.4</text>
+<text x="950" y="139" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" fill="#6b7280">conf 0.5 &#183; Intel GPU</text>
+<text x="1152" y="86" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="10" letter-spacing="1.6" fill="#c2c8d2" text-anchor="end">04</text>
+<line x1="282" y1="113" x2="332" y2="113" stroke="#14161a" stroke-width="1.6" marker-end="url(#ar)"/>
+<line x1="582" y1="113" x2="632" y2="113" stroke="#14161a" stroke-width="1.6" marker-end="url(#ar)"/>
+<line x1="882" y1="113" x2="932" y2="113" stroke="#14161a" stroke-width="1.6" marker-end="url(#ar)"/>
+<line x1="1050" y1="162" x2="1050" y2="231" stroke="#14161a" stroke-width="1.6" marker-end="url(#ar)"/>
+<text x="1062" y="202" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" letter-spacing="0.6" fill="#14161a" text-anchor="start">poses</text>
+<polygon points="1050,235 1136,295 1050,355 964,295" fill="#14161a"/>
+<text x="1050" y="291" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#ffffff" text-anchor="middle">reproj err</text>
+<text x="1050" y="309" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#ffffff" text-anchor="middle">&#8804; gate?</text>
+<rect x="632" y="246" width="250" height="98" rx="10" fill="#ffffff" stroke="#d8dde5" stroke-width="1.2"/>
+<text x="650" y="279" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="600" fill="#14161a">ROS2 publisher</text>
+<text x="650" y="303" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" fill="#6b7280">/armor_detection</text>
+<text x="650" y="321" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" fill="#6b7280">camera_id &#183; armor_id &#183; XYZ</text>
+<text x="866" y="268" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="10" letter-spacing="1.6" fill="#c2c8d2" text-anchor="end">05</text>
+<line x1="964" y1="295" x2="884" y2="295" stroke="#14161a" stroke-width="1.6" marker-end="url(#ar)"/>
+<text x="924" y="284" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" letter-spacing="0.6" fill="#14161a" text-anchor="middle">pass</text>
+<line x1="632" y1="295" x2="582" y2="295" stroke="#14161a" stroke-width="1.6" marker-end="url(#ar)"/>
+<rect x="332" y="246" width="250" height="98" rx="10" fill="#ffffff" stroke="#d8dde5" stroke-width="1.2"/>
+<text x="350" y="279" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="600" fill="#14161a">Aimer / gimbal</text>
+<text x="350" y="303" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" fill="#6b7280">subscribes to both topics</text>
+<text x="350" y="321" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" fill="#6b7280">may hold a stale target</text>
+<text x="566" y="268" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="10" letter-spacing="1.6" fill="#c2c8d2" text-anchor="end">06</text>
+<line x1="1050" y1="355" x2="1050" y2="424" stroke="#0f8a8a" stroke-width="1.6" marker-end="url(#ar-acc)"/>
+<text x="1062" y="392" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" letter-spacing="0.6" fill="#0f8a8a" text-anchor="start">fail</text>
+<rect x="964" y="428" width="204" height="84" rx="10" fill="#ffffff" stroke="#d8dde5" stroke-width="1.2" stroke-dasharray="6 5"/>
+<text x="982" y="461" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="600" fill="#14161a">Discard</text>
+<text x="982" y="485" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" fill="#6b7280">pose not published</text>
+<text x="1152" y="450" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="10" letter-spacing="1.6" fill="#c2c8d2" text-anchor="end"></text>
+<rect x="632" y="428" width="250" height="84" rx="10" fill="#ffffff" stroke="#d8dde5" stroke-width="1.2" stroke-dasharray="6 5"/>
+<text x="650" y="461" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="600" fill="#14161a">500 ms watchdog</text>
+<text x="650" y="485" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" fill="#6b7280">per camera &#8594; /timeout_status</text>
+<text x="866" y="450" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="10" letter-spacing="1.6" fill="#c2c8d2" text-anchor="end"></text>
+<line x1="757" y1="428" x2="757" y2="348" stroke="#8f98a4" stroke-width="1.6" stroke-dasharray="5 5" marker-end="url(#ar-mute)"/>
+<line x1="48" y1="452" x2="96" y2="452" stroke="#14161a" stroke-width="1.6" marker-end="url(#ar)"/>
+<text x="110" y="456" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="12" fill="#6b7280">frames and detections</text>
+<line x1="48" y1="486" x2="96" y2="486" stroke="#8f98a4" stroke-width="1.6" stroke-dasharray="5 5" marker-end="url(#ar-mute)"/>
+<text x="110" y="490" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-size="12" fill="#6b7280">health / control signal</text>
+</svg>
