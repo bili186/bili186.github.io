@@ -241,6 +241,94 @@
             </div>
         </section>
         
+        <!-- 实机与双板架构 -->
+        <section class="py-12">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-2">On the Robot</h2>
+                    <p class="text-gray-500 text-sm mb-8 max-w-3xl">
+                        The perception node is only half of a RoboMaster aiming loop. The other half &mdash; attitude, motion
+                        prediction and ballistics &mdash; runs on an STM32, and the split is deliberate: the miniPC is allowed to be
+                        late, the control loop is not.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <figure class="bg-white border border-gray-200 rounded-xl p-4 md:p-5 fade-in">
+                            <div class="relative cursor-pointer group rounded-lg overflow-hidden"
+                                 onclick="openImageViewer('../assets/images/uav_platform.jpg')">
+                                <img src="../assets/images/uav_platform.jpg"
+                                     alt="The 2026 season robot on the competition field: four mecanum wheels, a gimbal above the chassis, blue accent lighting along the side panels."
+                                     width="799" height="749" loading="lazy" class="w-full block">
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300">
+                                    <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        <i class="fa fa-search-plus mr-2"></i>View Large Image
+                                    </span>
+                                </div>
+                            </div>
+                            <figcaption class="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-500 leading-relaxed">
+                                2026 season robot on the field. Everything the perception node needs to know about the world arrives
+                                through the cameras mounted on this chassis &mdash; which is why the frame timestamps, not just the
+                                boxes, are part of the message.
+                            </figcaption>
+                        </figure>
+
+                        <div class="bg-white border border-gray-200 rounded-xl p-5 md:p-6 fade-in">
+                            <h3 class="text-lg font-semibold mb-4">Why the loop is split</h3>
+                            <ul class="space-y-4 text-sm text-gray-600 leading-relaxed">
+                                <li class="flex gap-3">
+                                    <i class="fa fa-microchip text-accent mt-1"></i>
+                                    <span><strong class="text-gray-900">miniPC &mdash; vision.</strong> Preprocess, light-bar detection,
+                                    bar pairing, pose solve. Float-heavy work that tolerates jitter and can restart without consequence.</span>
+                                </li>
+                                <li class="flex gap-3">
+                                    <i class="fa fa-cogs text-accent mt-1"></i>
+                                    <span><strong class="text-gray-900">STM32 &mdash; control.</strong> IMU attitude, motion-state
+                                    estimation, prediction with ballistic compensation, gimbal output to the GM6020. Fixed rate, no
+                                    dynamic allocation, no missed deadlines.</span>
+                                </li>
+                                <li class="flex gap-3">
+                                    <i class="fa fa-exchange text-accent mt-1"></i>
+                                    <span><strong class="text-gray-900">The change I made.</strong> The vision stack originally ran on a
+                                    Jetson Orin; I ported it to a miniPC as part of an architecture change aimed at cutting response
+                                    latency, leaving the Orin free and shortening the run to the cameras.</span>
+                                </li>
+                            </ul>
+
+                            <div class="mt-6 pt-4 border-t border-gray-100">
+                                <p class="text-[11px] uppercase tracking-wider text-gray-400 mb-2">What crosses the boundary</p>
+                                <div class="flex flex-wrap items-center gap-2 text-xs">
+                                    <span class="px-2.5 py-1 bg-gray-100 rounded text-gray-700 font-mono">pose &mdash; xyz + RPY</span>
+                                    <i class="fa fa-arrow-right text-gray-300"></i>
+                                    <span class="px-2.5 py-1 bg-gray-100 rounded text-gray-700 font-mono">gimbal command</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-3 leading-relaxed">
+                                    One message wide on purpose: widen the interface and every change to the detector starts leaking
+                                    into the control loop.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <figure class="bg-white border border-gray-200 rounded-xl p-4 md:p-6 mt-6 fade-in">
+                        <div class="overflow-x-auto">
+                            <img src="../assets/images/uav_deploy_split.png"
+                                 alt="Two-row block diagram. Top row, inside a box labelled miniPC: camera, image preprocessing, light-bar detection, light-bar pairing, position solving. Bottom row, inside a box labelled STM32: gimbal attitude estimation driven by a BMI088 IMU, motion-state estimation, motion prediction with ballistic compensation, gimbal control system, then a GM6020 motor."
+                                 width="1440" height="402" loading="lazy"
+                                 style="min-width: 660px; width: 100%; height: auto;">
+                        </div>
+                        <div class="sm:hidden mt-2 text-[11px] text-gray-400 text-right">scroll the diagram sideways &rarr;</div>
+                        <figcaption class="mt-4 pt-3 border-t border-gray-100 text-xs text-gray-500 leading-relaxed">
+                            <strong class="text-gray-700">Top row (miniPC):</strong> camera &rarr; preprocessing &rarr; light-bar
+                            detection &rarr; bar pairing &rarr; pose solving. <strong class="text-gray-700">Bottom row (STM32):</strong>
+                            BMI088 attitude &rarr; motion-state estimation &rarr; prediction with ballistic compensation &rarr; gimbal
+                            control &rarr; GM6020. The single arrow between the two boxes is the only thing that crosses the boundary:
+                            a target pose in, a gimbal command out. Labels are as drawn in the team's design document.
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
         <section class="py-12">
             <div class="container mx-auto px-4">
                 <div class="max-w-5xl mx-auto">

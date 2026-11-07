@@ -101,6 +101,95 @@
             </div>
         </section>
         
+        <!-- 数据集与训练曲线 -->
+        <section class="py-12">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-2">Dataset &amp; Training</h2>
+                    <p class="text-gray-500 text-sm mb-8 max-w-3xl">
+                        The data was shot and labelled in-house: welded test pieces under workshop lighting, one label file per
+                        frame. What follows is the material that fed the model and the curve it produced.
+                    </p>
+
+                    <figure class="bg-white border border-gray-200 rounded-xl p-4 md:p-6 fade-in">
+                        <div class="relative cursor-pointer group rounded-lg overflow-hidden"
+                             onclick="openImageViewer('../assets/images/weld_dataset_grid.jpg')">
+                            <img src="../assets/images/weld_dataset_grid.jpg"
+                                 alt="Sixteen sample frames from the self-built weld dataset. Each tile shows a weld bead running along a jointed steel plate, with the source filename printed above it."
+                                 width="1920" height="1464" loading="lazy" class="w-full block">
+                            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300">
+                                <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <i class="fa fa-search-plus mr-2"></i>View Large Image
+                                </span>
+                            </div>
+                        </div>
+                        <figcaption class="mt-4 pt-3 border-t border-gray-100 text-xs text-gray-500 leading-relaxed">
+                            Sixteen frames from the captured set, filenames kept in capture order so any detection can be traced
+                            back to its raw frame. The variation is the point: beads differ in width, spatter, undercut and travel
+                            pattern, on plate that is sometimes oiled and sometimes ground clean. A hand-tuned threshold on
+                            brightness or edge strength breaks somewhere in this grid; a learned detector does not.
+                        </figcaption>
+                    </figure>
+
+                    <figure class="bg-white border border-gray-200 rounded-xl p-4 md:p-6 mt-6 fade-in">
+                        <div class="flex flex-col sm:flex-row gap-6">
+                            <img src="../assets/images/weld_f1_curve.png"
+                                 alt="Line chart titled F1-Score per Epoch: the score rises from about 0.89 at epoch 1 to 0.91, then oscillates between 0.91 and 0.94 and settles around 0.93"
+                                 width="203" height="449" loading="lazy"
+                                 class="w-full max-w-[210px] mx-auto sm:mx-0 shrink-0 self-start rounded border border-gray-100">
+                            <div class="flex-1 flex flex-col">
+                                <h3 class="text-lg font-semibold mb-3">What the curve says</h3>
+                                <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                                    F1 clears 0.91 within two epochs and then oscillates instead of climbing &mdash; the signature of a
+                                    model that has already learned most of what the labels can teach it. A small, hand-built set leaves
+                                    little room for a long schedule.
+                                </p>
+                                <p class="text-sm text-gray-600 leading-relaxed">
+                                    The dips line up with batches holding the faint-seam frames that survived filtering. On a set this
+                                    size the residual error is dominated by label ambiguity rather than by model capacity, so the curve
+                                    flattens at &asymp;0.93 instead of approaching 1.0.
+                                </p>
+                                <div class="mt-auto pt-4">
+                                    <h4 class="text-xs uppercase tracking-wider text-gray-400 mb-2">At a glance</h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-3 py-1 bg-gray-100 rounded-full text-xs">YOLOv5</span>
+                                        <span class="px-3 py-1 bg-gray-100 rounded-full text-xs">&asymp;30 epochs</span>
+                                        <span class="px-3 py-1 bg-gray-100 rounded-full text-xs">F1 plateau &asymp;0.93</span>
+                                        <span class="px-3 py-1 bg-gray-100 rounded-full text-xs">86% reported accuracy</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </figure>
+
+                    <div class="bg-white border border-gray-200 rounded-xl p-5 md:p-6 mt-6 fade-in">
+                        <h3 class="text-lg font-semibold mb-4">How the labels were made</h3>
+                        <ul class="grid grid-cols-1 md:grid-cols-3 gap-5 text-sm text-gray-600 leading-relaxed">
+                            <li class="flex gap-3">
+                                <i class="fa fa-check text-accent mt-1"></i>
+                                <span><strong class="text-gray-900">Inclusion</strong> &mdash; the bead texture is continuous and the
+                                seam boundary stays visible across the whole frame.</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <i class="fa fa-times text-gray-400 mt-1"></i>
+                                <span><strong class="text-gray-900">Exclusion</strong> &mdash; the seam is too faint to call
+                                confidently by eye. Dropped rather than guessed: a wrong box teaches the model the wrong edge.</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <i class="fa fa-tags text-accent mt-1"></i>
+                                <span><strong class="text-gray-900">Annotation</strong> &mdash; boxes drawn per defect instance on the
+                                raw frame and exported in YOLO format, so training needs no conversion step.</span>
+                            </li>
+                        </ul>
+                        <p class="text-xs text-gray-400 mt-5 pt-4 border-t border-gray-100 leading-relaxed">
+                            Building the set by hand rather than scraping one means the class balance reflects the workshop instead
+                            of the internet &mdash; fewer frames, but every one of them is a real inspection case.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="py-12">
             <div class="container mx-auto px-4">
                 <div class="max-w-5xl mx-auto">
