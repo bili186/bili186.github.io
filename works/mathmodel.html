@@ -2,7 +2,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math Modeling Competitions | Xu Zhe</title>
-    <meta name="description" content="Mathematical modeling competitions: national and provincial awards across multiple contests.">
+    <meta name="description" content="Mathematical modeling competitions: the 2026 MCM/ICM paper reconstructing an unpublished fan vote and redesigning the rule that uses it, plus provincial awards.">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -70,122 +70,413 @@
     </nav>
 
     <main class="pt-16 pb-16">
+        <!-- 首屏 -->
         <section class="pt-16 pb-12 bg-gray-50">
             <div class="container mx-auto px-4">
                 <div class="max-w-5xl mx-auto">
+                    <p class="text-xs tracking-[0.2em] text-gray-400 uppercase mb-3">MCM/ICM 2026 &middot; Problem C</p>
                     <h1 class="text-3xl md:text-5xl font-bold mb-4">Math Modeling Competitions</h1>
                     <div class="flex flex-wrap gap-2 mb-6">
                         <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">Mathematical Modeling</span>
                         <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">Competition</span>
-                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">2024-2025</span>
+                        <span class="px-4 py-2 bg-gray-200 rounded-full text-sm">2024&ndash;2026</span>
                     </div>
-                    <p class="text-gray-600 text-lg mb-8">
-                        Won multiple national and provincial awards in mathematical modeling competitions, including American College Mathematics Modeling Contest and provincial undergraduate math competitions.
+                    <p class="text-gray-600 text-lg max-w-3xl">
+                        Contest work across MCM/ICM and provincial competitions. The 2026 paper is the one that took the
+                        longest: the fan vote on <em>Dancing with the Stars</em> is never published, so it had to be
+                        reconstructed before anything else could be asked.
                     </p>
                 </div>
             </div>
         </section>
-        
+
+        <!-- 整页流程图 -->
         <section class="py-12">
             <div class="container mx-auto px-4">
                 <div class="max-w-5xl mx-auto">
-                    <div class="relative cursor-pointer hover:opacity-90 transition-opacity" onclick="openImageViewer('../assets/covers/mathmodel.svg')">
-                        <img src="../assets/covers/mathmodel.svg" alt="Math Modeling Competitions" class="w-full h-72 md:h-96 object-cover rounded-lg border border-gray-100">
+                    <div class="relative cursor-pointer hover:opacity-95 transition-opacity" onclick="openImageViewer('../assets/images/mcm_flowchart.png')">
+                        <img src="../assets/images/mcm_flowchart.png" width="1920" height="1080" loading="lazy"
+                             alt="Overall flowchart of the paper: an input layer of contestant features and judge scores, four core models (audience vote estimation by percentage and rank, judge score by mixed effects, professional dancer by causal inference), a rule analysis layer with a Monte Carlo engine, and a voting optimisation layer that outputs the new system"
+                             class="w-full h-auto rounded-lg border border-gray-100 bg-white">
                         <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-300">
                             <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md opacity-0 hover:opacity-100">
                                 <i class="fa fa-search-plus mr-2"></i>View Large Image
                             </span>
                         </div>
                     </div>
+                    <p class="text-gray-400 text-xs mt-3">
+                        Figure 2 of the submitted paper &mdash; the whole study on one page: inputs, the four estimators,
+                        the rule-analysis layer, and the optimisation layer that produces a replacement voting system.
+                        <span class="md:hidden block mt-1">Tap the figure to open it full size.</span>
+                    </p>
                 </div>
             </div>
         </section>
-        
+
+        <!-- 论文 -->
         <section class="py-12">
             <div class="container mx-auto px-4">
                 <div class="max-w-5xl mx-auto">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                        <div class="fade-in">
-                            <h2 class="text-2xl font-bold mb-6">Competition Overview</h2>
-                            <p class="text-gray-600 mb-6 leading-relaxed">
-                                As a core team member, I participated in various national and provincial mathematical modeling competitions, responsible for model building, algorithm design and programming implementation.
+                    <h2 class="text-2xl font-bold mb-2">Reconstructing a vote nobody publishes</h2>
+                    <p class="text-gray-500 text-sm mb-8 max-w-3xl">
+                        <em>Adaptive Voting Mechanism for &ldquo;Dancing with the Stars&rdquo; Based on Multi-Model Simulation</em>
+                        &mdash; 24 pages, four sub-problems, one proposed system. Written for the 2026 MCM/ICM, Problem C.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="md:col-span-2 space-y-4 text-gray-600 leading-relaxed">
+                            <p>
+                                The show has run 34 seasons and has combined judges&rsquo; scores with viewers&rsquo; votes in two
+                                different ways: a rank-based rule (seasons 1&ndash;2 and 28&ndash;34) and a percentage-based one
+                                (seasons 3&ndash;27). After several seasons in which low-scoring contestants survived on fan
+                                support, season 28 added a wrinkle &mdash; the judges pick one of the bottom two couples to send
+                                home.
                             </p>
-                            <p class="text-gray-600 mb-6 leading-relaxed">
-                                The competitions covered optimization modeling, data analysis, prediction algorithms and other fields, which greatly improved my mathematical application and problem-solving abilities.
+                            <p>
+                                Only the weekly elimination was ever published, never the vote shares. So the first job was to
+                                work backwards: perturb the unknown shares inside the region that is still consistent with who
+                                went home, sample that region with a Dirichlet draw, and fuse the samples around a consensus
+                                centre. Once a plausible vote history exists, the two rules can be replayed against each other,
+                                the drivers on each side can be estimated, and a replacement system can be simulated rather
+                                than argued for.
                             </p>
-                            <h3 class="text-xl font-semibold mb-4 mt-8">Skills & Tools</h3>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">Mathematical Modeling</span>
-                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">Data Analysis</span>
-                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">SPSS</span>
+                            <p>
+                                The paper keeps four questions apart on purpose. Estimating the vote is a feasibility problem,
+                                comparing the rules is a counterfactual one, explaining the two tracks is an inference problem,
+                                and designing a better rule is a search over weights &mdash; each needed its own model, and each
+                                is reported with its own numbers.
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">Team 2616214</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">34 seasons</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">186 valid weeks</span>
                                 <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">Python</span>
+                                <span class="px-3 py-1 bg-gray-100 rounded-full text-sm">LaTeX</span>
                             </div>
                         </div>
-                        
-                        <div class="fade-in">
-                            <h2 class="text-2xl font-bold mb-6">Awards & Experience</h2>
-                            <div class="space-y-8">
-                                <div>
-                                    <h3 class="text-xl font-semibold mb-2">American Math Modeling Competition</h3>
-                                    <p class="text-gray-600">2025 | National Third Prize (Successful Participant)</p>
-                                </div>
-                                <div>
-                                    <h3 class="text-xl font-semibold mb-2">Provincial Math Modeling Contest</h3>
-                                    <p class="text-gray-600">2025 | Provincial Second & Third Prizes</p>
-                                </div>
-                                <div>
-                                    <h3 class="text-xl font-semibold mb-2">Mathematics Competition</h3>
-                                    <p class="text-gray-600">2025 | Provincial Third Prize</p>
-                                </div>
-                                <div>
-                                    <h3 class="text-xl font-semibold mb-2">Academic Scholarships</h3>
-                                    <p class="text-gray-600">2024-2025 | Second & Third Class Scholarships</p>
-                                </div>
+
+                        <figure class="md:col-span-1">
+                            <div class="relative cursor-pointer group rounded-lg overflow-hidden border border-gray-100"
+                                 onclick="openImageViewer('../assets/images/mcm_memo.jpg')">
+                                <img src="../assets/images/mcm_memo.jpg" width="707" height="1000" loading="lazy"
+                                     alt="One-page memo to the production team, headed Letter on Optimizing Program Production and Operations, arguing that judges and audience have drifted apart and proposing an adaptive scoring system that rewards week-to-week progress"
+                                     class="w-full block">
                             </div>
-                        </div>
+                            <figcaption class="text-gray-400 text-xs mt-3">
+                                The memo the brief asks for: one page, addressed to the production team rather than to the
+                                judges. Its argument is the paper&rsquo;s in miniature.
+                            </figcaption>
+                        </figure>
                     </div>
                 </div>
             </div>
         </section>
-        
+
+        <!-- 四个子问题 -->
         <section class="py-12 bg-gray-50">
             <div class="container mx-auto px-4">
                 <div class="max-w-5xl mx-auto">
-                    <h2 class="text-2xl font-bold mb-8">Competition Outcomes</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-white p-6 rounded-lg shadow-sm fade-in">
-                            <div class="w-12 h-12 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa fa-trophy text-accent text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold mb-2">Competition Awards</h3>
-                            <p class="text-gray-600">Won 5+ national and provincial competition awards.</p>
+                    <h2 class="text-2xl font-bold mb-2">Four questions, four models</h2>
+                    <p class="text-gray-500 text-sm mb-8">The headline numbers are the ones the paper reports, not rounded up.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white border border-gray-200 rounded-xl p-6 fade-in">
+                            <p class="text-xs tracking-[0.2em] text-gray-400 uppercase mb-2">01 &middot; Estimation</p>
+                            <h3 class="text-lg font-semibold mb-2">Recover the fan vote</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                Perturbation and Dirichlet sampling over the feasible set, fused at a consensus centre;
+                                consistency is then measured week by week and contestant by contestant.
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <strong>100%</strong> of 186 eliminations reproduced &middot; <strong>98.4%</strong> rank
+                                agreement &middot; &sigma;&nbsp;<strong>0.018</strong> across resamples
+                            </p>
                         </div>
-                        <div class="bg-white p-6 rounded-lg shadow-sm fade-in" style="transition-delay: 0.2s;">
-                            <div class="w-12 h-12 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa fa-calculator text-accent text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold mb-2">Ability Improvement</h3>
-                            <p class="text-gray-600">Mastered mathematical modeling and data analysis skills.</p>
+
+                        <div class="bg-white border border-gray-200 rounded-xl p-6 fade-in" style="transition-delay: 0.15s;">
+                            <p class="text-xs tracking-[0.2em] text-gray-400 uppercase mb-2">02 &middot; Comparison</p>
+                            <h3 class="text-lg font-semibold mb-2">Put the two rules side by side</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                Both rules replayed over every season, with Spearman correlation, an ANOVA and a divergence
+                                index to separate what each mechanism actually rewards.
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <strong>13.44%</strong> of weeks and <strong>55.88%</strong> of seasons change outcome &middot;
+                                audience weight <strong>0.922</strong> vs <strong>0.498</strong> &middot; the judges&rsquo;
+                                bottom-two saves only <strong>15&ndash;16%</strong> of extreme cases
+                            </p>
                         </div>
-                        <div class="bg-white p-6 rounded-lg shadow-sm fade-in" style="transition-delay: 0.4s;">
-                            <div class="w-12 h-12 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa fa-users text-accent text-xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold mb-2">Teamwork</h3>
-                            <p class="text-gray-600">Improved team collaboration and problem-solving abilities.</p>
+
+                        <div class="bg-white border border-gray-200 rounded-xl p-6 fade-in">
+                            <p class="text-xs tracking-[0.2em] text-gray-400 uppercase mb-2">03 &middot; Inference</p>
+                            <h3 class="text-lg font-semibold mb-2">What each side actually rewards</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                A mixed-effects panel for the judges, a dual-track verification for the fans, and a causal
+                                model for the professional partner.
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                judges: stability and trend &middot; fans: popularity, with technical score at
+                                <strong>&rho;&nbsp;=&nbsp;&minus;0.113</strong> &middot; Val Chmerkovskiy <strong>+42.4%</strong>,
+                                Corky Ballas <strong>&minus;51.7%</strong>
+                            </p>
+                        </div>
+
+                        <div class="bg-white border border-gray-200 rounded-xl p-6 fade-in" style="transition-delay: 0.15s;">
+                            <p class="text-xs tracking-[0.2em] text-gray-400 uppercase mb-2">04 &middot; Design</p>
+                            <h3 class="text-lg font-semibold mb-2">Propose a rule that hedges</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                Z-score standardisation, weights that loosen when the two sides disagree, and a bonus for
+                                week-on-week technical progress.
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                unjust-elimination rate <strong>0.022</strong> &middot; dark-horse survival
+                                <strong>0.589</strong> &middot; competition intensity <strong>0.454</strong>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        
+
+        <!-- 数据分析图 -->
+        <section class="py-12">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-2">What the data looks like</h2>
+                    <p class="text-gray-500 text-sm mb-8 max-w-3xl">
+                        Six panels cut from the paper&rsquo;s analysis of the reconstructed vote history &mdash; who arrives with an
+                        advantage, how far apart the two tracks already are, and where the score actually sends people.
+                    </p>
+
+                    <figure class="bg-white border border-gray-200 rounded-xl p-4">
+                        <div class="relative cursor-pointer group rounded-lg overflow-hidden"
+                             onclick="openImageViewer('../assets/images/mcm_analysis.png')">
+                            <img src="../assets/images/mcm_analysis.png" width="1106" height="600" loading="lazy"
+                                 alt="Six-panel analysis figure: a pie of industry advantage types (60% none, 20% fan preference, 20% dual advantage), judge score against estimated fan vote share (correlation 0.40), judge score distribution (mean 6.33, median 6.75), score level against score stability, celebrity popularity against judge score (correlation 0.62), and judge score by final placement group"
+                                 class="w-full block">
+                        </div>
+                        <figcaption class="text-gray-500 text-xs mt-4 leading-relaxed">
+                            Figure 5 of the paper. Only two in five contestants bring an advantage of some kind, and the
+                            two scatter panels show why the argument exists at all: judge score and fan vote share move
+                            together only loosely, while popularity and judge score are far tighter.
+                            <span class="md:hidden block mt-1">Tap the figure to open it full size.</span>
+                        </figcaption>
+                    </figure>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                        <div>
+                            <h3 class="text-sm font-semibold mb-2">Who arrives with an advantage</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                60% of contestants have neither an industry nor a fan base behind them; the remaining 40%
+                                split evenly between a fan preference and both advantages at once.
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-semibold mb-2">Two tracks, not one</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                Judge score and estimated fan share correlate at 0.40 &mdash; related, but nowhere near the same
+                                ranking. Popularity and judge score correlate at 0.62, and scores bunch up high (mean 6.33,
+                                median 6.75), which is exactly the regime where a vote share decides everything.
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-semibold mb-2">Placement tracks the score</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                The violin panel steps down monotonically from the top-3 group to the 10+ group, so the
+                                judge score is not noise &mdash; it is the fan vote layered on top that reorders the middle.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 验证数字 -->
+        <section class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-8">How well the vote model holds</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="bg-white border border-gray-200 rounded-xl p-5">
+                            <p class="text-3xl font-bold">186</p>
+                            <p class="text-gray-500 text-xs mt-1">weeks replayed</p>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-5">
+                            <p class="text-3xl font-bold">100%</p>
+                            <p class="text-gray-500 text-xs mt-1">eliminations reproduced</p>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-5">
+                            <p class="text-3xl font-bold">98.4%</p>
+                            <p class="text-gray-500 text-xs mt-1">rank agreement with the real result</p>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-5">
+                            <p class="text-3xl font-bold">91 : 44</p>
+                            <p class="text-gray-500 text-xs mt-1">candidate votes per week, rank vs percentage</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 text-sm leading-relaxed mt-6 max-w-3xl">
+                        The last number is the one worth pausing on. Under the percentage rule a single week&rsquo;s
+                        elimination history is consistent with about 44 distinct vote configurations; under the rank rule
+                        the same history admits about 91. The rank rule is therefore much harder to identify from the
+                        outside &mdash; and any claim about what it rewarded carries more uncertainty than the percentage
+                        rule does.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 新系统 -->
+        <section class="py-12">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-2">The system it proposes</h2>
+                    <p class="text-gray-500 text-sm mb-8 max-w-3xl">
+                        Five layers: standardise both tracks, measure how far apart they are, let that distance set the
+                        weight, add a bonus for improvement, then decide.
+                    </p>
+
+                    <figure class="bg-white border border-gray-200 rounded-xl p-4">
+                        <div class="relative cursor-pointer group rounded-lg overflow-hidden"
+                             onclick="openImageViewer('../assets/images/mcm_system.png')">
+                            <img src="../assets/images/mcm_system.png" width="1035" height="560" loading="lazy"
+                                 alt="Architecture of the proposed voting system: judge scores and audience votes are standardised with Z-scores and winsorised, combined into a disagreement index, hedged with an adaptive weight, adjusted by a progress bonus, and finally turned into a weekly elimination and a final ranking"
+                                 class="w-full block">
+                        </div>
+                        <figcaption class="text-gray-500 text-xs mt-4 leading-relaxed">
+                            Figure 6 of the paper. Two tracks in, one elimination out &mdash; and the weight between them
+                            set by how far apart the two sides are.
+                            <span class="md:hidden block mt-1">Tap the figure to open it full size.</span>
+                        </figcaption>
+                    </figure>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10 items-start">
+                        <div class="space-y-4 text-gray-600 text-sm leading-relaxed">
+                            <p>
+                                The adaptive weight is the whole idea. When the two tracks roughly agree, the fixed
+                                50/50 split stands; once the divergence index passes a threshold, the weight slides
+                                toward the judges and the popular vote loses its veto. A progress term then adds a small
+                                bonus to whoever beat their own recent average.
+                            </p>
+                            <p>
+                                All five mechanisms were back-tested on the same reconstructed history with three
+                                indicators: the unjust-elimination rate (lower is better), competition intensity entropy
+                                (higher means tighter scores and more suspense) and a dark-horse survival index (higher
+                                means contestants who improve week on week stay longer).
+                            </p>
+                        </div>
+
+                        <div>
+                            <div class="overflow-x-auto bg-white border border-gray-200 rounded-xl">
+                                <table class="w-full text-sm">
+                                    <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
+                                        <tr>
+                                            <th class="text-left px-4 py-3 font-medium">Mechanism</th>
+                                            <th class="text-right px-4 py-3 font-medium">UER</th>
+                                            <th class="text-right px-4 py-3 font-medium">HC</th>
+                                            <th class="text-right px-4 py-3 font-medium">DHSI</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100 text-gray-600">
+                                        <tr>
+                                            <td class="px-4 py-2.5">Rank-based</td>
+                                            <td class="px-4 py-2.5 text-right">0.0293</td>
+                                            <td class="px-4 py-2.5 text-right">0.4542</td>
+                                            <td class="px-4 py-2.5 text-right">0.5853</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-2.5">Percentage-based</td>
+                                            <td class="px-4 py-2.5 text-right">0.0122</td>
+                                            <td class="px-4 py-2.5 text-right">0.4542</td>
+                                            <td class="px-4 py-2.5 text-right">0.5903</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-2.5">Judge choice, rank</td>
+                                            <td class="px-4 py-2.5 text-right">0.0269</td>
+                                            <td class="px-4 py-2.5 text-right">0.4542</td>
+                                            <td class="px-4 py-2.5 text-right">0.5898</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-2.5">Judge choice, percentage</td>
+                                            <td class="px-4 py-2.5 text-right">0.0293</td>
+                                            <td class="px-4 py-2.5 text-right">0.4542</td>
+                                            <td class="px-4 py-2.5 text-right">0.5796</td>
+                                        </tr>
+                                        <tr class="bg-gray-50 font-medium text-primary">
+                                            <td class="px-4 py-2.5">Proposed system</td>
+                                            <td class="px-4 py-2.5 text-right">0.0220</td>
+                                            <td class="px-4 py-2.5 text-right">0.4542</td>
+                                            <td class="px-4 py-2.5 text-right">0.5885</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-gray-500 text-xs mt-3 leading-relaxed">
+                                Table 5 of the paper. The percentage rule still posts the lowest unjust-elimination rate
+                                &mdash; it buys that by letting popularity decide, which is the behaviour the new system
+                                deliberately gives up. Intensity is flat across all five, as it should be: none of them
+                                changes how the judges score.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 获奖 -->
+        <section class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-8">Awards</h2>
+                    <div class="overflow-x-auto bg-white border border-gray-200 rounded-xl">
+                        <table class="w-full min-w-[520px] text-sm">
+                            <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
+                                <tr>
+                                    <th class="text-left px-5 py-3 font-medium w-28">Year</th>
+                                    <th class="text-left px-5 py-3 font-medium">Contest</th>
+                                    <th class="text-left px-5 py-3 font-medium">Result</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-gray-600">
+                                <tr>
+                                    <td class="px-5 py-3 whitespace-nowrap">2026</td>
+                                    <td class="px-5 py-3">MCM/ICM &middot; Problem C</td>
+                                    <td class="px-5 py-3">Successful Participant &middot; team 2616214</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-3 whitespace-nowrap">2025</td>
+                                    <td class="px-5 py-3">MCM/ICM</td>
+                                    <td class="px-5 py-3">National Third Prize</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-3 whitespace-nowrap">2025</td>
+                                    <td class="px-5 py-3">Provincial mathematical modeling contest</td>
+                                    <td class="px-5 py-3">Second and Third Prizes</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-3 whitespace-nowrap">2025</td>
+                                    <td class="px-5 py-3">Provincial mathematics competition</td>
+                                    <td class="px-5 py-3">Third Prize</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-3 whitespace-nowrap">2024&ndash;2025</td>
+                                    <td class="px-5 py-3">Academic scholarships</td>
+                                    <td class="px-5 py-3">Second and Third Class</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 相关项目 -->
         <section class="py-12">
             <div class="container mx-auto px-4">
                 <h2 class="text-2xl font-bold mb-10 text-center">Related Projects</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
                     <div class="work-card bg-white rounded-lg overflow-hidden shadow-sm group fade-in">
                         <div class="relative overflow-hidden">
-                            <img src="../assets/covers/weld.jpg" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                            <img src="../assets/covers/weld.jpg" width="784" height="512" loading="lazy" alt="A weld bead running across a T-joint" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
                         </div>
                         <div class="p-4">
                             <h3 class="font-semibold mb-1">Weld Image Recognition</h3>
@@ -193,7 +484,7 @@
                         </div>
                     </div>
                     <div class="work-card bg-white rounded-lg overflow-hidden shadow-sm group fade-in" style="transition-delay: 0.2s;">
-                        <img src="../assets/covers/reid-multimodal.svg" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="../assets/images/glaw_fig1.png" loading="lazy" alt="GLAW pipeline figure" class="w-full h-48 object-contain bg-[#f8f9fb] transition-transform duration-500 group-hover:scale-110">
                         <div class="p-4">
                             <h3 class="font-semibold mb-1">GLAW</h3>
                             <a href="glaw.html" class="text-accent text-sm font-medium hover:underline">View Project</a>
